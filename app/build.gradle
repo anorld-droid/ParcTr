@@ -64,6 +64,10 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
 
+    //map dependencies
+    implementation 'com.google.android.gms:play-services-places:17.0.0'
+    implementation "com.google.android.gms:play-services-location:20.0.0"
+    implementation "com.google.android.gms:play-services-location:20.0.0"
 
 }
 apply plugin: 'com.google.gms.google-services'

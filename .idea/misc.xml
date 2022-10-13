@@ -10,6 +10,7 @@
         <entry key="app/src/main/res/drawable/splash_screen_bg.xml" value="0.216" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_park_location.xml" value="0.225" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_map.xml" value="0.22604166666666667" />
         <entry key="app/src/main/res/layout/fragment_tracking.xml" value="0.22604166666666667" />

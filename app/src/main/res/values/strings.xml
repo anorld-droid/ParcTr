@@ -10,5 +10,5 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="title_home">Home</string>
-    <string name="track_list">Track_list</string>
+    <string name="track_list">Track List</string>
 </resources>

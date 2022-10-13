@@ -8,13 +8,13 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.parctr.ui.home.MapFragment"
+        android:name="com.example.parctr.ui.home.map.MapFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_map" >
     </fragment>
     <fragment
         android:id="@+id/navigation_tracklist"
-        android:name="com.example.parctr.ui.home.TrackingFragment"
+        android:name="com.example.parctr.ui.home.trackinglist.TrackingFragment"
         android:label="@string/track_list"
         tools:layout="@layout/fragment_tracking_list" />
 </navigation>
