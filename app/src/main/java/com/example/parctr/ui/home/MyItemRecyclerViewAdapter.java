@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.parctr.databinding.FragmentTrackingBinding;
 import com.example.parctr.ui.home.placeholder.PlaceholderContent.PlaceholderItem;
-import com.example.parctr.ui.home.databinding.FragmentTrackingBinding;
 
 import java.util.List;
 
