@@ -33,4 +33,7 @@
     <string name="select">Select</string>
     <string name="type_of_parcel">Type of Parcel</string>
     <string name="save">SAVE</string>
+    <string name="_07XXXXXXXX">07XXXXXXXX</string>
+    <string name="status">Status</string>
+    <string name="picked_up">Delivered</string>
 </resources>

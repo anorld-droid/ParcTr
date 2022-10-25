@@ -7,6 +7,9 @@ public class TrackingItems {
         @SerializedName("id")
         @Expose
         private String id;
+    @SerializedName("doc_id")
+    @Expose
+    private String docID;
         @SerializedName("type_parcel")
         @Expose
         private String typeOfParcel;
@@ -48,6 +51,7 @@ public class TrackingItems {
         this.pickUpDestination = pickUpDestination;
         this.status = status;
     }
+    public TrackingItems(){}
 
     public String getId() {
             return id;
@@ -130,5 +134,13 @@ public class TrackingItems {
 
     public void setTypeOfParcel(String typeOfParcel) {
         this.typeOfParcel = typeOfParcel;
+    }
+
+    public String getDocID() {
+        return docID;
+    }
+
+    public void setDocID(String docID) {
+        this.docID = docID;
     }
 }

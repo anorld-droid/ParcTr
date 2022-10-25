@@ -41,8 +41,6 @@
                 android:layout_height="@dimen/spacing_large" />
 
 
-
-
             <EditText
                 android:id="@+id/parcel_id"
                 android:layout_width="match_parent"
@@ -62,8 +60,6 @@
                 android:textStyle="normal" />
 
 
-
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -74,7 +70,9 @@
                     android:id="@+id/date_send"
                     android:layout_width="90dp"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="18dp"
                     android:layout_weight="1"
+                    android:fontFamily="@font/aldrich"
                     android:text="@string/date_send"
                     android:textAlignment="textStart"
                     android:textColor="@color/text_black"
@@ -100,7 +98,8 @@
                     android:textAlignment="textEnd"
                     android:textColor="@android:color/holo_red_light"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:ignore="OnClick" />
             </LinearLayout>
 
 
@@ -166,14 +165,12 @@
                 android:textStyle="normal" />
 
 
-
             <EditText
-                android:id="@+id/pick_up_destination"
+                android:id="@+id/receiver_phone_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/pick_up_destination"
                 android:backgroundTint="@null"
-                android:inputType="textPassword"
+                android:hint="@string/_07XXXXXXXX"
                 android:maxLength="50"
                 android:maxLines="1"
                 android:paddingStart="20dp"
@@ -185,6 +182,39 @@
                 android:textSize="22sp"
                 android:textStyle="normal" />
 
+            <EditText
+                android:id="@+id/pick_up_destination"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@null"
+                android:hint="@string/pick_up_destination"
+                android:maxLength="50"
+                android:maxLines="1"
+                android:paddingStart="20dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="16dp"
+                android:singleLine="true"
+                android:textColor="@color/color_black"
+                android:textSize="22sp"
+                android:textStyle="normal" />
+
+            <EditText
+                android:id="@+id/status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@null"
+                android:hint="@string/status"
+                android:maxLength="50"
+                android:maxLines="1"
+                android:paddingStart="20dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="16dp"
+                android:singleLine="true"
+                android:textColor="@color/color_black"
+                android:textSize="22sp"
+                android:textStyle="normal" />
 
             <View
                 android:layout_width="0dp"

@@ -2,24 +2,40 @@ package com.example.parctr.ui.home.trackinglist;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.parctr.databinding.FragmentTrackingBinding;
 import com.example.parctr.model.TrackingItems;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.type.DateTime;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link TrackingItems}.
@@ -28,6 +44,9 @@ import java.util.Map;
 public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapter.ViewHolder> {
 
     private final List<TrackingItems> mValues;
+    private FirebaseFirestore mDatabase;
+    private FirebaseAuth mAuth;
+
 
     public TrackingListAdapter(List<TrackingItems> items) {
         mValues = items;
@@ -54,6 +73,34 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
         holder.mPickUpTime.setText(mValues.get(position).getPickUpTime());
         holder.mPickUpDestination.setText(mValues.get(position).getPickUpDestination());
         holder.mChangeStatus.setText(String.valueOf("Status(" + mValues.get(position).getStatus() + ")"));
+        if (!Objects.equals(mValues.get(position).getPickUpTime(), "*****")){
+            holder.mDelivered.setVisibility(View.GONE);
+        }
+        holder.mDelivered.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onClick(View view) {
+                FirebaseUser mCurrentUser = mAuth.getCurrentUser();
+                DocumentReference trackingItem = mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("items").document(mValues.get(holder.getLayoutPosition()).getDocID());
+                trackingItem.get().addOnSuccessListener(documentSnapshot -> {
+                    TrackingItems trIt = documentSnapshot.toObject(TrackingItems.class);
+                    assert trIt != null;
+                    SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, EEE");
+                    SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+                    Date now = new Date();
+                    String date = formatter.format(now);
+                    String time = timeFormatter.format(now);
+                    trackingItem
+                            .update("pickUpDate", date, "pickUpTime", time)
+                            .addOnSuccessListener(aVoid -> Log.d("TAG", "DocumentSnapshot successfully updated!"))
+                            .addOnFailureListener(e -> Log.w("TAG", "Error updating document", e));
+
+                    Toast.makeText(view.getContext(), "Pick up time updated", Toast.LENGTH_LONG).show();
+                    holder.mDelivered.setVisibility(View.GONE);
+                    notifyDataSetChanged();
+                });
+            }
+        });
 
     }
 
@@ -75,6 +122,8 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
         public final TextView mPickUpTime;
         public final TextView mPickUpDestination;
         public final Button mChangeStatus;
+        public final Button mDelivered;
+
 
         public ViewHolder(FragmentTrackingBinding binding) {
             super(binding.getRoot());
@@ -89,6 +138,11 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
             mPickUpTime = binding.pickUpTime;
             mPickUpDestination = binding.pickUpDestination;
             mChangeStatus = binding.btnChangeStatus;
+
+            mDelivered = binding.delivered;
+
+            mDatabase = FirebaseFirestore.getInstance();
+            mAuth = FirebaseAuth.getInstance();
 
         }
 
