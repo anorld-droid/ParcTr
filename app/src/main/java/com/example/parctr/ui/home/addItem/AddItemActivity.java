@@ -1,25 +1,32 @@
-package com.example.parctr.ui.home;
+package com.example.parctr.ui.home.addItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.parctr.R;
 import com.example.parctr.model.TrackingItems;
-import com.example.parctr.ui.registration.RegisterActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -31,19 +38,22 @@ public class AddItemActivity extends AppCompatActivity {
     private EditText mReceiver;
     private EditText mDestination;
     private TextView mDateSendTxv;
-    private EditText mStatus;
+    private Switch mStatus;
     private FirebaseFirestore mDatabase;
     private FirebaseAuth mAuth;
 
     private Button mSave;
+    private Button mScanCode;
     final Calendar mDateSend = Calendar.getInstance();
+    private static final int REQUEST_CAMERA_PERMISSION_RESULT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
-        getSupportActionBar().setTitle("Item");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("New Tracking Item");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
 
         mDatabase = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -54,8 +64,9 @@ public class AddItemActivity extends AppCompatActivity {
         mReceiver = findViewById(R.id.receiver);
         mDestination = findViewById(R.id.pick_up_destination);
         mDateSendTxv = findViewById(R.id.date_send);
-        mStatus = findViewById(R.id.status);
+        mStatus = findViewById(R.id.parcelPaidSwitch);
         mSave = findViewById(R.id.save);
+        mScanCode = findViewById(R.id.scan_code);
         FirebaseUser mCurrentUser = mAuth.getCurrentUser();
 
         mSave.setOnClickListener(view -> {
@@ -74,7 +85,7 @@ public class AddItemActivity extends AppCompatActivity {
                     "*****",
                     "*****",
                     mDestination.getText().toString(),
-                    mStatus.getText().toString()
+                    mStatus.isChecked()
             );
 
             mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("items").add(trackingItems)
@@ -83,7 +94,15 @@ public class AddItemActivity extends AppCompatActivity {
                     .addOnFailureListener(e -> Log.w("TAG", "Error writing document", e));
             finish();
         });
-
+        mScanCode.setOnClickListener(view12 -> {
+            if (hasCameraPermission()) {
+                IntentIntegrator integrator = new IntentIntegrator(this);
+                integrator.setCaptureActivity(BarcodeCaptureActivity.class);
+                integrator.setOrientationLocked(false);
+                integrator.setPrompt("");
+                integrator.initiateScan();
+            }
+        });
 
     }
 
@@ -109,5 +128,32 @@ public class AddItemActivity extends AppCompatActivity {
     private String getFormattedDate(Calendar date) {
         SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, EEE HH:mm");
         return formatter.format(date.getTime());
+    }
+
+
+
+    public boolean hasCameraPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION_RESULT);
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() != null ) {
+                Toast.makeText(this, getString(R.string.main_menu_scanned_text) + " " + result.getContents(), Toast.LENGTH_SHORT).show();
+                mParcelID.setText(result.getContents());
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

@@ -11,6 +11,7 @@
         <entry key="app/src/main/res/layout/activity_add_item.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_parcel_editor.xml" value="0.35520833333333335" />
         <entry key="app/src/main/res/layout/activity_park_location.xml" value="0.225" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_map.xml" value="0.22604166666666667" />

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/lyt_parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -23,16 +24,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            >
+            android:layout_marginEnd="16dp">
 
             <TextView
                 android:id="@+id/parcel_id"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_marginTop="16dp"
-                android:textAllCaps="true"
                 android:text="@string/_11112888757"
+                android:textAllCaps="true"
                 android:textColor="@android:color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -82,8 +82,8 @@
                 android:id="@+id/type_parcel_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
                 android:text="@string/laptop_hp_pavillion"
+                android:textColor="@android:color/black"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="@+id/type_parcel"
                 app:layout_constraintTop_toBottomOf="@+id/type_parcel" />
@@ -103,9 +103,9 @@
                 android:id="@+id/sender_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Elijah Wanyama"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"
-                android:text="Elijah Wanyama"
                 app:layout_constraintStart_toStartOf="@+id/sender"
                 app:layout_constraintTop_toBottomOf="@+id/sender" />
 
@@ -124,9 +124,9 @@
                 android:id="@+id/receiver_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Paul Brian"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"
-                android:text="Paul Brian"
                 app:layout_constraintStart_toStartOf="@+id/receiver"
                 app:layout_constraintTop_toBottomOf="@+id/receiver" />
 
@@ -150,6 +150,7 @@
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="@+id/date_text"
                 app:layout_constraintTop_toBottomOf="@+id/date_text" />
+
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline"
                 android:layout_width="wrap_content"
@@ -211,7 +212,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/pick_up_date" />
 
 
-
             <TextView
                 android:id="@+id/pick_up_destination"
                 android:layout_width="wrap_content"
@@ -233,26 +233,32 @@
                 app:layout_constraintStart_toStartOf="@+id/pick_up_destination"
                 app:layout_constraintTop_toBottomOf="@+id/pick_up_destination" />
 
-
-            <Button
-                android:id="@+id/btn_change_status"
-                android:layout_width="349dp"
-                android:layout_height="49dp"
-                android:layout_margin="8dp"
-                android:layout_marginTop="56dp"
-                android:layout_marginEnd="14dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/button_curve"
-                android:fontFamily="@font/aldrich"
-                android:text="@string/status_btn"
-                android:textAllCaps="false"
-                android:textColor="#fff"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+            <TextView
+                android:id="@+id/payment_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/package_edit_dialog_parcel_payment_status"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@+id/pick_up_destination_value"
                 app:layout_constraintTop_toBottomOf="@+id/pick_up_destination_value" />
+
+            <Switch
+                android:id="@+id/parcelPaidSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:checked="true"
+                android:nextFocusForward="@+id/productPageET"
+                android:singleLine="true"
+                android:text="@string/package_edit_dialog_parcel_paid"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/payment_status"
+                app:layout_constraintTop_toBottomOf="@+id/payment_status"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

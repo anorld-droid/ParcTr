@@ -36,10 +36,10 @@ public class TrackingItems {
         private String pickUpDestination;
     @SerializedName("status")
     @Expose
-    private String status;
+    private Boolean status;
 
     public TrackingItems(
-            String id, String typeOfParcel, String sender, String receiver, String dateSend, String timeSend, String pickUpDate, String pickUpTime, String pickUpDestination, String status) {
+            String id, String typeOfParcel, String sender, String receiver, String dateSend, String timeSend, String pickUpDate, String pickUpTime, String pickUpDestination, Boolean status) {
         this.id = id;
         this.typeOfParcel = typeOfParcel;
         this.sender = sender;
@@ -64,11 +64,11 @@ public class TrackingItems {
 
 
 
-    public String getStatus() {
+    public Boolean getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Boolean status) {
         this.status = status;
     }
 

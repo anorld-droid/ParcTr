@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,15 +73,17 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
         holder.mPickUpDate.setText(mValues.get(position).getPickUpDate());
         holder.mPickUpTime.setText(mValues.get(position).getPickUpTime());
         holder.mPickUpDestination.setText(mValues.get(position).getPickUpDestination());
-        holder.mChangeStatus.setText(String.valueOf("Status(" + mValues.get(position).getStatus() + ")"));
+        holder.mParcelPaidSwitch.setChecked(mValues.get(position).getStatus());
+
         if (!Objects.equals(mValues.get(position).getPickUpTime(), "*****")){
             holder.mDelivered.setVisibility(View.GONE);
         }
+        FirebaseUser mCurrentUser = mAuth.getCurrentUser();
         holder.mDelivered.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onClick(View view) {
-                FirebaseUser mCurrentUser = mAuth.getCurrentUser();
+
                 DocumentReference trackingItem = mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("items").document(mValues.get(holder.getLayoutPosition()).getDocID());
                 trackingItem.get().addOnSuccessListener(documentSnapshot -> {
                     TrackingItems trIt = documentSnapshot.toObject(TrackingItems.class);
@@ -92,6 +95,27 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
                     String time = timeFormatter.format(now);
                     trackingItem
                             .update("pickUpDate", date, "pickUpTime", time)
+                            .addOnSuccessListener(aVoid -> Log.d("TAG", "DocumentSnapshot successfully updated!"))
+                            .addOnFailureListener(e -> Log.w("TAG", "Error updating document", e));
+
+                    Toast.makeText(view.getContext(), "Pick up time updated", Toast.LENGTH_LONG).show();
+                    holder.mDelivered.setVisibility(View.GONE);
+                    notifyDataSetChanged();
+                });
+            }
+        });
+
+        holder.mParcelPaidSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                assert mCurrentUser != null;
+                DocumentReference trackingItem = mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("items").document(mValues.get(holder.getLayoutPosition()).getDocID());
+                trackingItem.get().addOnSuccessListener(documentSnapshot -> {
+                    TrackingItems trIt = documentSnapshot.toObject(TrackingItems.class);
+                    assert trIt != null;
+                    Boolean status = !(trIt.getStatus());
+                    trackingItem
+                            .update("status", status)
                             .addOnSuccessListener(aVoid -> Log.d("TAG", "DocumentSnapshot successfully updated!"))
                             .addOnFailureListener(e -> Log.w("TAG", "Error updating document", e));
 
@@ -121,7 +145,7 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
         public final TextView mPickUpDate;
         public final TextView mPickUpTime;
         public final TextView mPickUpDestination;
-        public final Button mChangeStatus;
+        public final Switch mParcelPaidSwitch;
         public final Button mDelivered;
 
 
@@ -137,7 +161,7 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
             mPickUpDate = binding.pickUpDate;
             mPickUpTime = binding.pickUpTime;
             mPickUpDestination = binding.pickUpDestination;
-            mChangeStatus = binding.btnChangeStatus;
+            mParcelPaidSwitch = binding.parcelPaidSwitch;
 
             mDelivered = binding.delivered;
 

@@ -36,4 +36,9 @@
     <string name="_07XXXXXXXX">07XXXXXXXX</string>
     <string name="status">Status</string>
     <string name="picked_up">Delivered</string>
+    <string name="package_edit_dialog_parcel_payment_status">Payment Status</string>
+    <string name="package_edit_dialog_parcel_paid">Parcel paid</string>
+    <string name="phone_number">Receiver\'s Phone Number</string>
+    <string name="scan_code">Scan code</string>
+    <string name="main_menu_scanned_text">Scanned:</string>
 </resources>

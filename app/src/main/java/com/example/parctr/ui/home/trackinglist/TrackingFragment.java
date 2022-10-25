@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.parctr.R;
 import com.example.parctr.model.TrackingItems;
-import com.example.parctr.ui.home.AddItemActivity;
+import com.example.parctr.ui.home.addItem.AddItemActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
