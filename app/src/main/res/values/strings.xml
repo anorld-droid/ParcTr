@@ -11,4 +11,19 @@
     <string name="login_failed">"Login failed"</string>
     <string name="title_home">Home</string>
     <string name="track_list">Track List</string>
+    <string name="qr_code">QR Code</string>
+    <string name="parcel_type">Type of parcel</string>
+    <string name="sender">Sender</string>
+    <string name="receiver">Receiver</string>
+    <string name="date_send">Date Sent</string>
+    <string name="pick_up_date">Pick up date</string>
+    <string name="pick_up_destination">Pick up destination</string>
+    <string name="status_btn">Status(Paid)</string>
+    <string name="from">Date Send</string>
+    <string name="date">Oct 22, SUN</string>
+    <string name="time_send">08:00am</string>
+    <string name="pick_up">Pick up</string>
+    <string name="pick_up_time">05:00pm</string>
+    <string name="laptop_hp_pavillion">Laptop: Hp Pavillion</string>
+    <string name="_11112888757">11112888757</string>
 </resources>

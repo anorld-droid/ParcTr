@@ -1,4 +1,4 @@
-package com.example.parctr.data;
+package com.example.parctr.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

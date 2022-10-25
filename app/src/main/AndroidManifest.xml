@@ -34,7 +34,7 @@
             android:name=".ui.registration.RegisterActivity"
             android:exported="true" />
         <activity
-            android:name=".ui.home.map.ParkLocation"
+            android:name=".ui.home.map.Location"
              />
         <meta-data
             android:name="preloaded_fonts"

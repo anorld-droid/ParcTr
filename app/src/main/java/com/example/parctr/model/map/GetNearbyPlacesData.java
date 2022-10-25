@@ -1,4 +1,4 @@
-package com.example.parctr.data.map;
+package com.example.parctr.model.map;
 
 import android.os.AsyncTask;
 import android.util.Log;

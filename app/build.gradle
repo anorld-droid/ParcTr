@@ -55,7 +55,7 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-firestore'
 
-    //For data classes
+    //For model classes
     implementation 'com.google.code.gson:gson:2.9.1'
 
     def nav_version = "2.5.2"
@@ -68,6 +68,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-places:17.0.0'
     implementation "com.google.android.gms:play-services-location:20.0.0"
     implementation "com.google.android.gms:play-services-location:20.0.0"
+
+
+    implementation 'com.google.zxing:core:3.3.3'
 
 }
 apply plugin: 'com.google.gms.google-services'

@@ -12,5 +12,5 @@
         map:layout_constraintEnd_toEndOf="parent"
         map:layout_constraintStart_toStartOf="parent"
         map:layout_constraintTop_toTopOf="parent"
-        tools:context=".ui.home.map.ParkLocation" />
+        tools:context=".ui.home.map.Location" />
 </androidx.constraintlayout.widget.ConstraintLayout>

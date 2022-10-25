@@ -2,13 +2,9 @@ package com.example.parctr.ui.home.map;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -16,7 +12,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.parctr.R;
-import com.example.parctr.data.map.GetNearbyPlacesData;
+import com.example.parctr.model.map.GetNearbyPlacesData;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -27,14 +23,13 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class ParkLocation extends FragmentActivity implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback,
+public class Location extends FragmentActivity implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
@@ -46,14 +41,14 @@ public class ParkLocation extends FragmentActivity implements GoogleMap.OnMarker
     double latitude;
     double longitude;
     private int PROXIMITY_RADIUS = 10000;
-    Location mLastLocation;
+    android.location.Location mLastLocation;
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_park_location);
+        setContentView(R.layout.activity_location);
 
         //TODO:enable after getting API key
 //        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -162,7 +157,7 @@ public class ParkLocation extends FragmentActivity implements GoogleMap.OnMarker
 
 
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged(android.location.Location location) {
         Log.d("onLocationChanged", "entered");
 
         mLastLocation = location;

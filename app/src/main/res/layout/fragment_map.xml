@@ -16,7 +16,7 @@
         map:layout_constraintStart_toStartOf="parent"
         map:layout_constraintTop_toTopOf="parent"
         map:layout_constraintVertical_bias="0.0"
-        tools:context=".ui.home.map.ParkLocation" />
+        tools:context=".ui.home.map.Location" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

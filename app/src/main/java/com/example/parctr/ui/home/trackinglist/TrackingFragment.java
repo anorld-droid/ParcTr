@@ -13,7 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.parctr.R;
+import com.example.parctr.model.TrackingItems;
 import com.example.parctr.ui.home.placeholder.PlaceholderContent;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -55,7 +65,7 @@ public class TrackingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tracking_list, container, false);
-
+        List<TrackingItems> trackingItems = new ArrayList<TrackingItems>();
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -65,8 +75,9 @@ public class TrackingFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(PlaceholderContent.ITEMS));
+            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(trackingItems));
         }
         return view;
+
     }
 }

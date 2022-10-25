@@ -1,4 +1,4 @@
-package com.example.parctr.data.map;
+package com.example.parctr.model.map;
 
 import android.util.Log;
 
@@ -25,7 +25,7 @@ public class DownloadUrl {
             // Connecting to url
             urlConnection.connect();
 
-            // Reading data from url
+            // Reading model from url
             iStream = urlConnection.getInputStream();
 
             BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
