@@ -10,103 +10,125 @@ public class TrackingItems {
         @SerializedName("type_parcel")
         @Expose
         private String typeOfParcel;
-        @SerializedName("last_name")
+        @SerializedName("sender")
         @Expose
-        private String lastName;
-        @SerializedName("phone")
+        private String sender;
+        @SerializedName("receiver")
         @Expose
-        private String phone;
-        @SerializedName("email")
+        private String receiver;
+        @SerializedName("date_send")
         @Expose
-        private String email;
-        @SerializedName("email_verified_at")
+        private String dateSend;
+        @SerializedName("time_send")
         @Expose
-        private Object emailVerifiedAt;
-        @SerializedName("role")
+        private String timeSend;
+        @SerializedName("pick_up_date")
         @Expose
-        private String role;
-        @SerializedName("created_at")
+        private String pickUpDate;
+        @SerializedName("pick_up_time")
         @Expose
-        private String createdAt;
-        @SerializedName("updated_at")
+        private String pickUpTime;
+        @SerializedName("pick_up_destination")
         @Expose
-        private String updatedAt;
+        private String pickUpDestination;
+    @SerializedName("status")
+    @Expose
+    private String status;
 
-        public String getId() {
+    public TrackingItems(
+            String id, String typeOfParcel, String sender, String receiver, String dateSend, String timeSend, String pickUpDate, String pickUpTime, String pickUpDestination, String status) {
+        this.id = id;
+        this.typeOfParcel = typeOfParcel;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.dateSend = dateSend;
+        this.timeSend = timeSend;
+        this.pickUpDate = pickUpDate;
+        this.pickUpTime = pickUpTime;
+        this.pickUpDestination = pickUpDestination;
+        this.status = status;
+    }
+
+    public String getId() {
             return id;
         }
 
-        public void setId(int id) {
+        public void setId(String id) {
             this.id = id;
         }
 
-        public String getFirstName() {
-            return firstName;
-        }
-
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
-        }
-
-        public String getPhone() {
-            return phone;
-        }
-
-        public void setPhone(String phone) {
-            this.phone = phone;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
-        public Object getEmailVerifiedAt() {
-            return emailVerifiedAt;
-        }
-
-        public void setEmailVerifiedAt(Object emailVerifiedAt) {
-            this.emailVerifiedAt = emailVerifiedAt;
-        }
-
-        public String getRole() {
-            return role;
-        }
-
-        public void setRole(String role) {
-            this.role = role;
-        }
-
-        public String getCreatedAt() {
-            return createdAt;
-        }
-
-        public void setCreatedAt(String createdAt) {
-            this.createdAt = createdAt;
-        }
-
-        public String getUpdatedAt() {
-            return updatedAt;
-        }
-
-        public void setUpdatedAt(String updatedAt) {
-            this.updatedAt = updatedAt;
-        }
 
 
 
+    public String getStatus() {
+        return status;
+    }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
+    public String getPickUpDestination() {
+        return pickUpDestination;
+    }
 
+    public void setPickUpDestination(String pickUpDestination) {
+        this.pickUpDestination = pickUpDestination;
+    }
+
+    public String getPickUpTime() {
+        return pickUpTime;
+    }
+
+    public void setPickUpTime(String pickUpTime) {
+        this.pickUpTime = pickUpTime;
+    }
+
+    public String getPickUpDate() {
+        return pickUpDate;
+    }
+
+    public void setPickUpDate(String pickUpDate) {
+        this.pickUpDate = pickUpDate;
+    }
+
+    public String getTimeSend() {
+        return timeSend;
+    }
+
+    public void setTimeSend(String timeSend) {
+        this.timeSend = timeSend;
+    }
+
+    public String getDateSend() {
+        return dateSend;
+    }
+
+    public void setDateSend(String dateSend) {
+        this.dateSend = dateSend;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public String getTypeOfParcel() {
+        return typeOfParcel;
+    }
+
+    public void setTypeOfParcel(String typeOfParcel) {
+        this.typeOfParcel = typeOfParcel;
+    }
 }

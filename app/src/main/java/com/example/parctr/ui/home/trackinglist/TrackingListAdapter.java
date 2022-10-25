@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.example.parctr.databinding.FragmentTrackingBinding;
 import com.example.parctr.model.TrackingItems;
-import com.example.parctr.ui.home.placeholder.PlaceholderContent.PlaceholderItem;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -26,11 +25,11 @@ import java.util.Map;
  * {@link RecyclerView.Adapter} that can display a {@link TrackingItems}.
  * TODO: Replace the implementation with code for your model type.
  */
-public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
+public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapter.ViewHolder> {
 
     private final List<TrackingItems> mValues;
 
-    public MyItemRecyclerViewAdapter(List<TrackingItems> items) {
+    public TrackingListAdapter(List<TrackingItems> items) {
         mValues = items;
     }
 
@@ -46,14 +45,15 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).getId());
         generateBarCode(holder, mValues.get(position).getId());
-        holder.mTypeOfParcel.setText(mValues.get(position).typeOfParcel);
-        holder.mSender.setText(mValues.get(position).sender);
-        holder.mReceiver.setText(mValues.get(position).receiver);
-        holder.mDateSend.setText(mValues.get(position).dateSend);
-        holder.mTimeSend.setText(mValues.get(position).timeSend);
-        holder.mPickUpDate.setText(mValues.get(position).pickUpDate);
-        holder.mPickUpTime.setText(mValues.get(position).pickUpTime);
-        holder.mPickUpDestination.setText(mValues.get(position).pickUpDestination);
+        holder.mTypeOfParcel.setText(mValues.get(position).getTypeOfParcel());
+        holder.mSender.setText(mValues.get(position).getSender());
+        holder.mReceiver.setText(mValues.get(position).getReceiver());
+        holder.mDateSend.setText(mValues.get(position).getDateSend());
+        holder.mTimeSend.setText(mValues.get(position).getTimeSend());
+        holder.mPickUpDate.setText(mValues.get(position).getPickUpDate());
+        holder.mPickUpTime.setText(mValues.get(position).getPickUpTime());
+        holder.mPickUpDestination.setText(mValues.get(position).getPickUpDestination());
+        holder.mChangeStatus.setText(String.valueOf("Status(" + mValues.get(position).getStatus() + ")"));
 
     }
 
@@ -98,7 +98,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         }
     }
 
-    private void generateBarCode(final ViewHolder holder, String id){
+    private void generateBarCode(final ViewHolder holder, String id) {
         // barcode model
 
         // barcode image

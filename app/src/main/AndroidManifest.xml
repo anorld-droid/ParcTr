@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -17,6 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.home.AddItemActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.home.HomeActivity"
             android:exported="false" />
@@ -33,13 +37,11 @@
         <activity
             android:name=".ui.registration.RegisterActivity"
             android:exported="true" />
-        <activity
-            android:name=".ui.home.map.Location"
-             />
+        <activity android:name=".ui.home.map.Location" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyD1XwtM5P9rGEwSyvDY4f2W5VqhS85Xdjo" />

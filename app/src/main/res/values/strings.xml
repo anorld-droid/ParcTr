@@ -26,4 +26,11 @@
     <string name="pick_up_time">05:00pm</string>
     <string name="laptop_hp_pavillion">Laptop: Hp Pavillion</string>
     <string name="_11112888757">11112888757</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="new_tracking_item">New Tracking Item</string>
+    <string name="id">ID</string>
+    <string name="select">Select</string>
+    <string name="type_of_parcel">Type of Parcel</string>
+    <string name="save">SAVE</string>
 </resources>

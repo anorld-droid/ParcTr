@@ -1,26 +1,19 @@
 package com.example.parctr.ui.home.trackinglist;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.parctr.R;
 import com.example.parctr.model.TrackingItems;
-import com.example.parctr.ui.home.placeholder.PlaceholderContent;
-
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
+import com.example.parctr.ui.home.AddItemActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,54 +22,38 @@ import java.util.List;
  * A fragment representing a list of Items.
  */
 public class TrackingFragment extends Fragment {
-
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public TrackingFragment() {
-    }
-
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static TrackingFragment newInstance(int columnCount) {
-        TrackingFragment fragment = new TrackingFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
-    }
+    private RecyclerView recyclerView;
+    private TrackingListAdapter trackingListAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_tracking_list, container, false);
+        final View view = inflater.inflate(R.layout.fragment_tracking_list, container, false);
+
+        FloatingActionButton mFABAddItem = view.findViewById(R.id.add_item);
         List<TrackingItems> trackingItems = new ArrayList<TrackingItems>();
+        TrackingItems trackingItems1 = new TrackingItems("11189888757",
+                "Laptop Hp Pavillion ", "Elijah Wanyama", "Paul, Brian", "Oct 22, Sun", "05:00am", "Oct 23, Mon", "05:00pm", "Nyeri, DeKUT", "Pending"
+        );
+        TrackingItems trackingItems2 = new TrackingItems("11112888757",
+                "Samsung Galaxy A20s", "Elijah Wanyama", "Paul, Brian", "Oct 24, Sun", "03:00pm", "Oct 25, Mon", "05:00am", "Nyeri, DeKUT", "Pending"
+        );
+        trackingItems.add(trackingItems1);
+        trackingItems.add(trackingItems2);
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(trackingItems));
-        }
+        recyclerView = view.findViewById(R.id.list);
+        trackingListAdapter = new TrackingListAdapter(trackingItems);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
+
+        recyclerView.setLayoutManager(layoutManager);
+
+        recyclerView.setAdapter(trackingListAdapter);
+
+        mFABAddItem.setOnClickListener(view1 -> {
+            Intent transactionIntent = new Intent(getContext(), AddItemActivity.class);
+            startActivity(transactionIntent);
+        });
         return view;
 
     }
