@@ -36,6 +36,8 @@ public class AddItemActivity extends AppCompatActivity {
     private EditText mParcelType;
     private EditText mSender;
     private EditText mReceiver;
+    private  EditText mReceiverPhoneNumber;
+    private  EditText mReceiverIDNumber;
     private EditText mDestination;
     private TextView mDateSendTxv;
     private Switch mStatus;
@@ -62,6 +64,8 @@ public class AddItemActivity extends AppCompatActivity {
         mParcelType = findViewById(R.id.type_parcel);
         mSender = findViewById(R.id.sender);
         mReceiver = findViewById(R.id.receiver);
+        mReceiverIDNumber = findViewById(R.id.receiver_id);
+        mReceiverPhoneNumber = findViewById(R.id.receiver_phone_number);
         mDestination = findViewById(R.id.pick_up_destination);
         mDateSendTxv = findViewById(R.id.date_send);
         mStatus = findViewById(R.id.parcelPaidSwitch);
@@ -80,6 +84,8 @@ public class AddItemActivity extends AppCompatActivity {
                     mParcelType.getText().toString(),
                     mSender.getText().toString(),
                     mReceiver.getText().toString(),
+                    mReceiverIDNumber.getText().toString(),
+                    mReceiverPhoneNumber.getText().toString(),
                     date,
                     time,
                     "*****",

@@ -56,14 +56,14 @@
                 <View
                     android:layout_width="0dp"
                     android:layout_height="@dimen/spacing_large" />
+
                 <TextView
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:text="@string/id"
-                    android:textSize="18sp"
-                    />
+                    android:textSize="18sp" />
 
                 <EditText
                     android:id="@+id/parcel_id"
@@ -85,8 +85,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:text="@string/date_send"
-                    android:textSize="18sp"
-                    />
+                    android:textSize="18sp" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -135,14 +135,14 @@
                     android:layout_height="0.5dp"
                     android:layout_marginTop="12dp"
                     android:background="@color/browser_actions_title_color" />
+
                 <TextView
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:text="@string/type_of_parcel"
-                    android:textSize="18sp"
-                    />
+                    android:textSize="18sp" />
 
                 <EditText
                     android:id="@+id/type_parcel"
@@ -163,8 +163,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:text="@string/sender"
-                    android:textSize="18sp"
-                    />
+                    android:textSize="18sp" />
+
                 <EditText
                     android:id="@+id/sender"
                     android:layout_width="match_parent"
@@ -185,8 +185,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:text="@string/receiver"
-                    android:textSize="18sp"
-                    />
+                    android:textSize="18sp" />
+
                 <EditText
                     android:id="@+id/receiver"
                     android:layout_width="match_parent"
@@ -199,14 +199,14 @@
                     android:textColor="@color/color_black"
                     android:textSize="22sp"
                     android:textStyle="normal" />
+
                 <TextView
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:text="@string/phone_number"
-                    android:textSize="18sp"
-                    />
+                    android:textSize="18sp" />
 
                 <EditText
                     android:id="@+id/receiver_phone_number"
@@ -214,21 +214,42 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@null"
                     android:hint="@string/_07XXXXXXXX"
+                    android:inputType="phone"
                     android:maxLength="50"
                     android:maxLines="1"
-
                     android:singleLine="true"
                     android:textColor="@color/color_black"
                     android:textSize="22sp"
                     android:textStyle="normal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/id_number"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/receiver_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@null"
+                    android:hint="@string/id_number_ex"
+                    android:inputType="number"
+                    android:maxLength="50"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="@color/color_black"
+                    android:textSize="22sp"
+                    android:textStyle="normal" />
+
                 <TextView
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:text="@string/pick_up_destination"
-                    android:textSize="18sp"
-                 />
+                    android:textSize="18sp" />
 
                 <EditText
                     android:id="@+id/pick_up_destination"
@@ -243,25 +264,25 @@
                     android:textColor="@color/color_black"
                     android:textSize="22sp"
                     android:textStyle="normal" />
+
                 <TextView
                     android:id="@+id/payment_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:text="@string/package_edit_dialog_parcel_payment_status"
-                    android:textSize="18sp"
-                   />
+                    android:textSize="18sp" />
 
                 <Switch
                     android:id="@+id/parcelPaidSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:textSize="20sp"
-                    android:textColor="@android:color/black"
-                    android:text="@string/package_edit_dialog_parcel_paid"
                     android:nextFocusForward="@+id/productPageET"
                     android:singleLine="true"
+                    android:text="@string/package_edit_dialog_parcel_paid"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
 
                     tools:ignore="UseSwitchCompatOrMaterialXml" />
 
