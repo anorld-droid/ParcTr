@@ -213,7 +213,7 @@
 
 
             <TextView
-                android:id="@+id/pick_up_destination"
+                android:id="@+id/pick_up_destination_value"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:layout_marginStart="16dp"
@@ -224,24 +224,24 @@
                 app:layout_constraintTop_toBottomOf="@+id/time_send" />
 
             <TextView
-                android:id="@+id/pick_up_destination_value"
+                android:id="@+id/pick_up_destination"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Kitale"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="@+id/pick_up_destination"
-                app:layout_constraintTop_toBottomOf="@+id/pick_up_destination" />
+                app:layout_constraintStart_toStartOf="@+id/pick_up_destination_value"
+                app:layout_constraintTop_toBottomOf="@+id/pick_up_destination_value" />
 
             <TextView
                 android:id="@+id/payment_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:text="@string/package_edit_dialog_parcel_payment_status"
+                android:text="@string/package_edit_dialog_parcel_pickup_status"
                 android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="@+id/pick_up_destination_value"
-                app:layout_constraintTop_toBottomOf="@+id/pick_up_destination_value" />
+                app:layout_constraintStart_toStartOf="@+id/pick_up_destination"
+                app:layout_constraintTop_toBottomOf="@+id/pick_up_destination" />
 
             <Switch
                 android:id="@+id/parcelPaidSwitch"
@@ -251,7 +251,7 @@
                 android:checked="true"
                 android:nextFocusForward="@+id/productPageET"
                 android:singleLine="true"
-                android:text="@string/package_edit_dialog_parcel_paid"
+                android:text="@string/package_edit_dialog_parcel_picked_up"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -1,7 +1,5 @@
 package com.example.parctr.ui.home.trackinglist;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.util.Log;
@@ -14,25 +12,20 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.parctr.databinding.FragmentTrackingBinding;
 import com.example.parctr.model.TrackingItems;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.type.DateTime;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -67,15 +60,15 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
         generateBarCode(holder, mValues.get(position).getId());
         holder.mTypeOfParcel.setText(mValues.get(position).getTypeOfParcel());
         holder.mSender.setText(mValues.get(position).getSender());
-        holder.mReceiver.setText(mValues.get(position).getReceiver());
+        holder.mReceiver.setText(String.valueOf(mValues.get(position).getReceiver() + " " + mValues.get(position).getReceiverIDNumber()));
         holder.mDateSend.setText(mValues.get(position).getDateSend());
         holder.mTimeSend.setText(mValues.get(position).getTimeSend());
         holder.mPickUpDate.setText(mValues.get(position).getPickUpDate());
         holder.mPickUpTime.setText(mValues.get(position).getPickUpTime());
         holder.mPickUpDestination.setText(mValues.get(position).getPickUpDestination());
-        holder.mParcelPaidSwitch.setChecked(mValues.get(position).getStatus());
+        holder.mParcelPickedSwitch.setChecked(!Objects.equals(mValues.get(position).getPickUpTime(), "*****"));
 
-        if (!Objects.equals(mValues.get(position).getPickUpTime(), "*****")){
+        if (!Objects.equals(mValues.get(position).getPickUpTime(), "*****")) {
             holder.mDelivered.setVisibility(View.GONE);
         }
         FirebaseUser mCurrentUser = mAuth.getCurrentUser();
@@ -84,28 +77,27 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
             @Override
             public void onClick(View view) {
 
-                DocumentReference trackingItem = mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("items").document(mValues.get(holder.getLayoutPosition()).getDocID());
-                trackingItem.get().addOnSuccessListener(documentSnapshot -> {
-                    TrackingItems trIt = documentSnapshot.toObject(TrackingItems.class);
-                    assert trIt != null;
-                    SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, EEE");
-                    SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
-                    Date now = new Date();
-                    String date = formatter.format(now);
-                    String time = timeFormatter.format(now);
-                    trackingItem
-                            .update("pickUpDate", date, "pickUpTime", time)
-                            .addOnSuccessListener(aVoid -> Log.d("TAG", "DocumentSnapshot successfully updated!"))
-                            .addOnFailureListener(e -> Log.w("TAG", "Error updating document", e));
+//                DocumentReference trackingItem = mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("items").document(mValues.get(holder.getLayoutPosition()).getDocID());
+//                trackingItem.get().addOnSuccessListener(documentSnapshot -> {
+//                    TrackingItems trIt = documentSnapshot.toObject(TrackingItems.class);
+//                    assert trIt != null;
+//                    SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, EEE");
+//                    SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+//                    Date now = new Date();
+//                    String date = formatter.format(now);
+//                    String time = timeFormatter.format(now);
+//                    trackingItem
+//                            .update("pickUpDate", date, "pickUpTime", time)
+//                            .addOnSuccessListener(aVoid -> Log.d("TAG", "DocumentSnapshot successfully updated!"))
+//                            .addOnFailureListener(e -> Log.w("TAG", "Error updating document", e));
 
-                    Toast.makeText(view.getContext(), "Pick up time updated", Toast.LENGTH_LONG).show();
-                    holder.mDelivered.setVisibility(View.GONE);
-                    notifyDataSetChanged();
-                });
+                Toast.makeText(view.getContext(), "Receiver notified", Toast.LENGTH_LONG).show();
+                notifyDataSetChanged();
+//                });
             }
         });
 
-        holder.mParcelPaidSwitch.setOnClickListener(new View.OnClickListener() {
+        holder.mParcelPickedSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 assert mCurrentUser != null;
@@ -145,7 +137,7 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
         public final TextView mPickUpDate;
         public final TextView mPickUpTime;
         public final TextView mPickUpDestination;
-        public final Switch mParcelPaidSwitch;
+        public final Switch mParcelPickedSwitch;
         public final Button mDelivered;
 
 
@@ -161,7 +153,7 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
             mPickUpDate = binding.pickUpDate;
             mPickUpTime = binding.pickUpTime;
             mPickUpDestination = binding.pickUpDestination;
-            mParcelPaidSwitch = binding.parcelPaidSwitch;
+            mParcelPickedSwitch = binding.parcelPaidSwitch;
 
             mDelivered = binding.delivered;
 

@@ -41,4 +41,8 @@
     <string name="phone_number">Receiver\'s Phone Number</string>
     <string name="scan_code">Scan code</string>
     <string name="main_menu_scanned_text">Scanned:</string>
+    <string name="package_edit_dialog_parcel_picked_up">Parcel picked up</string>
+    <string name="package_edit_dialog_parcel_pickup_status">Pick up status</string>
+    <string name="id_number">Receiver\'s ID No.</string>
+    <string name="id_number_ex">123456789</string>
 </resources>
