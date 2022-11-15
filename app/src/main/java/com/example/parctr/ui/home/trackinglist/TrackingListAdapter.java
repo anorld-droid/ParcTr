@@ -1,6 +1,7 @@
 package com.example.parctr.ui.home.trackinglist;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +27,8 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +43,7 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
     private final List<TrackingItems> mValues;
     private FirebaseFirestore mDatabase;
     private FirebaseAuth mAuth;
+    private  FirebaseUser mCurrentUser;
 
 
     public TrackingListAdapter(List<TrackingItems> items) {
@@ -71,7 +75,7 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
         if (!Objects.equals(mValues.get(position).getPickUpTime(), "*****")) {
             holder.mDelivered.setVisibility(View.GONE);
         }
-        FirebaseUser mCurrentUser = mAuth.getCurrentUser();
+        mCurrentUser = mAuth.getCurrentUser();
         holder.mDelivered.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -100,21 +104,33 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
         holder.mParcelPickedSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                assert mCurrentUser != null;
-                DocumentReference trackingItem = mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("items").document(mValues.get(holder.getLayoutPosition()).getDocID());
-                trackingItem.get().addOnSuccessListener(documentSnapshot -> {
-                    TrackingItems trIt = documentSnapshot.toObject(TrackingItems.class);
-                    assert trIt != null;
-                    Boolean status = !(trIt.getStatus());
-                    trackingItem
-                            .update("status", status)
-                            .addOnSuccessListener(aVoid -> Log.d("TAG", "DocumentSnapshot successfully updated!"))
-                            .addOnFailureListener(e -> Log.w("TAG", "Error updating document", e));
+                if (!holder.mParcelPickedSwitch.isChecked()) {
+                    assert mCurrentUser != null;
+                    DocumentReference trackingItem = mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("items").document(mValues.get(holder.getLayoutPosition()).getDocID());
+                    trackingItem.get().addOnSuccessListener(documentSnapshot -> {
+                        TrackingItems trIt = documentSnapshot.toObject(TrackingItems.class);
+                        assert trIt != null;
+                        SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, EEE");
+                        SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+                        Date now = new Date();
+                        String date = formatter.format(now);
+                        String time = timeFormatter.format(now);
+                        Boolean status = !(trIt.getStatus());
+                        trackingItem
+                                .update("status", status, "pickUpDate", date, "pickUpTime", time)
+                                .addOnSuccessListener(aVoid -> Log.d("TAG", "DocumentSnapshot successfully updated!"))
+                                .addOnFailureListener(e -> Log.w("TAG", "Error updating document", e));
+                        trIt.setDocID(mValues.get(holder.getLayoutPosition()).getDocID());
+                        trIt.setStatus(status);
+                        trIt.setPickUpDate(date);
+                        trIt.setPickUpTime(time);
+                        Toast.makeText(view.getContext(), "Pick up time updated", Toast.LENGTH_LONG).show();
+                        archiveItem(trIt, view.getContext());
+                        holder.mDelivered.setVisibility(View.GONE);
+                        notifyDataSetChanged();
+                    });
 
-                    Toast.makeText(view.getContext(), "Pick up time updated", Toast.LENGTH_LONG).show();
-                    holder.mDelivered.setVisibility(View.GONE);
-                    notifyDataSetChanged();
-                });
+                }
             }
         });
 
@@ -168,22 +184,26 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
         }
     }
 
+    private void archiveItem(TrackingItems trackingItem, Context context) {
+        mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("archive").add(trackingItem)
+                .addOnSuccessListener(documentReference -> Toast.makeText(context, "Item archived",
+                        Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Log.w("TAG", "Error writing document"));
+        mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("items").document(trackingItem.getDocID()).delete()
+                .addOnSuccessListener(documentReference -> {})
+                .addOnFailureListener(e -> Log.w("TAG", "Error writing document", e));
+    }
+
     private void generateBarCode(final ViewHolder holder, String id) {
         // barcode model
-
         // barcode image
         Bitmap bitmap = null;
-
-
         try {
-
             bitmap = encodeAsBitmap(id);
             holder.mBarcode.setImageBitmap(bitmap);
-
         } catch (WriterException e) {
             e.printStackTrace();
         }
-
     }
 
     /**************************************************************
@@ -241,5 +261,6 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
         }
         return null;
     }
+
 
 }
