@@ -45,4 +45,10 @@
     <string name="package_edit_dialog_parcel_pickup_status">Pick up status</string>
     <string name="id_number">Receiver\'s ID No.</string>
     <string name="id_number_ex">123456789</string>
+    <string name="welcome_to_parctr">Welcome to ParcTr,</string>
+    <string name="tracking">Tracking</string>
+    <string name="update_parcel">Update Parcel Status</string>
+    <string name="archive">Archive</string>
+    <string name="log_out">Log Out</string>
+    <string name="add_parcel">Add Parcel</string>
 </resources>

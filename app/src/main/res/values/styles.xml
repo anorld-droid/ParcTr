@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="SplashScreenTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">
             @drawable/splash_screen_bg
@@ -12,8 +13,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">@color/colorAccent</item>
     </style>
-
 
 
     <style name="AppTheme.NoActionBar">
@@ -33,8 +34,9 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="windowActionModeOverlay">true</item>
-    </style>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
 
+    </style>
 
 
     <style name="Material" parent="Theme.MaterialComponents.Light.NoActionBar">
