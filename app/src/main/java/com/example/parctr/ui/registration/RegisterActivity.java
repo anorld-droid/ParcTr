@@ -1,7 +1,5 @@
 package com.example.parctr.ui.registration;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,10 +10,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.parctr.R;
-import com.example.parctr.model.User;
 import com.example.parctr.domain.BasicUtils;
-import com.example.parctr.ui.home.HomeActivity;
+import com.example.parctr.model.User;
+import com.example.parctr.ui.MainActivity;
 import com.example.parctr.ui.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,7 +38,6 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
         name = findViewById(R.id.nameField);
         contactNo = findViewById(R.id.contactNoField);
         email = findViewById(R.id.emailField);
@@ -57,7 +56,8 @@ public class RegisterActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            //TODO: Go to home page
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -67,8 +67,6 @@ public class RegisterActivity extends AppCompatActivity {
             String txt_password = password.getText().toString();
             String txt_name = name.getText().toString();
             String txt_contact_no = contactNo.getText().toString();
-
-
             if (!utils.isNameValid(txt_name)) {
                 Toast.makeText(RegisterActivity.this, "Name is Invalid!", Toast.LENGTH_SHORT).show();
             } else if (!utils.isPhoneNoValid(txt_contact_no)) {
@@ -86,7 +84,7 @@ public class RegisterActivity extends AppCompatActivity {
                 progressDialog.setCancelable(false);
                 progressDialog.show();
                 signUpUser(txt_email, txt_password, txt_name, txt_contact_no);
-                Intent intent=new Intent(RegisterActivity.this, HomeActivity.class);
+                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             } else {
@@ -95,14 +93,12 @@ public class RegisterActivity extends AppCompatActivity {
         });
         loginSwitchText.setOnClickListener(view -> {
             String passEmail = email.getText().toString();
-
-            Intent intent=new Intent(RegisterActivity.this, LoginActivity.class);
-            if(!passEmail.isEmpty()){
-                intent.putExtra("EMAIL",passEmail);
+            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+            if (!passEmail.isEmpty()) {
+                intent.putExtra("EMAIL", passEmail);
             }
             startActivity(intent);
             finish();
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);  //slide from left to right
         });
     }
 
@@ -122,8 +118,6 @@ public class RegisterActivity extends AppCompatActivity {
                         assert mAuthCurrentUser != null;
 
                         addUserToDB(user, mAuthCurrentUser.getUid());
-                        //TODO: Go to home page
-
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -137,8 +131,5 @@ public class RegisterActivity extends AppCompatActivity {
         mDatabase.collection("users").document(userID).collection("userDetails").add(user)
                 .addOnSuccessListener(documentReference -> Log.d("TAG", "DocumentSnapshot successfully written!"))
                 .addOnFailureListener(e -> Log.w("TAG", "Error writing document", e));
-
     }
-
-
 }

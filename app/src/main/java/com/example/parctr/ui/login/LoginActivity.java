@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.parctr.R;
 import com.example.parctr.domain.BasicUtils;
+import com.example.parctr.ui.MainActivity;
 import com.example.parctr.ui.home.HomeActivity;
 import com.example.parctr.ui.registration.RegisterActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -59,10 +60,9 @@ public class LoginActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            Intent intent=new Intent(LoginActivity.this, HomeActivity.class);
+            Intent intent=new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             Toast.makeText(LoginActivity.this,"Log in success.",Toast.LENGTH_SHORT).show();
         }
     }
@@ -98,7 +98,6 @@ public class LoginActivity extends AppCompatActivity {
             }
             startActivity(intent);
             finish();
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
     }
