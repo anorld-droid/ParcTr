@@ -2,6 +2,7 @@ package com.example.parctr.ui.home.trackinglist;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -72,7 +73,7 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
         holder.mPickUpDestination.setText(mValues.get(position).getPickUpDestination());
         holder.mParcelPickedSwitch.setChecked(!Objects.equals(mValues.get(position).getPickUpTime(), "*****"));
 
-        if (!Objects.equals(mValues.get(position).getPickUpTime(), "*****")) {
+        if (!Objects.equals(mValues.get(holder.getLayoutPosition()).getPickUpTime(), "*****")) {
             holder.mDelivered.setVisibility(View.GONE);
         }
         mCurrentUser = mAuth.getCurrentUser();
@@ -81,30 +82,17 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
             @Override
             public void onClick(View view) {
 
-//                DocumentReference trackingItem = mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("items").document(mValues.get(holder.getLayoutPosition()).getDocID());
-//                trackingItem.get().addOnSuccessListener(documentSnapshot -> {
-//                    TrackingItems trIt = documentSnapshot.toObject(TrackingItems.class);
-//                    assert trIt != null;
-//                    SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, EEE");
-//                    SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
-//                    Date now = new Date();
-//                    String date = formatter.format(now);
-//                    String time = timeFormatter.format(now);
-//                    trackingItem
-//                            .update("pickUpDate", date, "pickUpTime", time)
-//                            .addOnSuccessListener(aVoid -> Log.d("TAG", "DocumentSnapshot successfully updated!"))
-//                            .addOnFailureListener(e -> Log.w("TAG", "Error updating document", e));
 
+                sendEmail(mValues.get(holder.getLayoutPosition()).getId(), mValues.get(holder.getLayoutPosition()).getPickUpDestination(), mValues.get(holder.getLayoutPosition()).getReceiverPhoneNumber(), view.getContext());
                 Toast.makeText(view.getContext(), "Receiver notified", Toast.LENGTH_LONG).show();
                 notifyDataSetChanged();
-//                });
             }
         });
 
         holder.mParcelPickedSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Objects.equals(mValues.get(position).getPickUpTime(), "*****")) {
+                if (Objects.equals(mValues.get(holder.getLayoutPosition()).getPickUpTime(), "*****")) {
                     assert mCurrentUser != null;
                     DocumentReference trackingItem = mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("items").document(mValues.get(holder.getLayoutPosition()).getDocID());
                     trackingItem.get().addOnSuccessListener(documentSnapshot -> {
@@ -135,6 +123,28 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
                 }
             }
         });
+
+    }
+    private void sendEmail(String parcelID, String destination, String receiverEmail, Context context){
+        String message = "Parcel ID " + parcelID + " has been received at ParcTr  "
+                + destination + " office. You can now collect it anytime with your National ID.";
+        final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+        emailIntent.setType("text/plain");
+        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{receiverEmail});
+        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "ParcTr, Parcel Delivery.");
+        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, message);
+
+
+        emailIntent.setType("message/rfc822");
+
+        try {
+            context.startActivity(Intent.createChooser(emailIntent,
+                    "Send email using..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(context,
+                    "No email clients installed.",
+                    Toast.LENGTH_SHORT).show();
+        }
 
     }
 

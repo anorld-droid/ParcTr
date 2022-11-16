@@ -205,16 +205,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:text="@string/phone_number"
+                    android:text="@string/prompt_email"
                     android:textSize="18sp" />
 
                 <EditText
-                    android:id="@+id/receiver_phone_number"
+                    android:id="@+id/receiver_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@null"
-                    android:hint="@string/_07XXXXXXXX"
-                    android:inputType="phone"
+                    android:hint="@string/prompt_email_hint"
+                    android:inputType="textEmailAddress"
                     android:maxLength="50"
                     android:maxLines="1"
                     android:singleLine="true"

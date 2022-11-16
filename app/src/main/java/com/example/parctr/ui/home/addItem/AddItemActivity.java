@@ -36,7 +36,7 @@ public class AddItemActivity extends AppCompatActivity {
     private EditText mParcelType;
     private EditText mSender;
     private EditText mReceiver;
-    private  EditText mReceiverPhoneNumber;
+    private  EditText mReceiverEmail;
     private  EditText mReceiverIDNumber;
     private EditText mDestination;
     private TextView mDateSendTxv;
@@ -65,7 +65,7 @@ public class AddItemActivity extends AppCompatActivity {
         mSender = findViewById(R.id.sender);
         mReceiver = findViewById(R.id.receiver);
         mReceiverIDNumber = findViewById(R.id.receiver_id);
-        mReceiverPhoneNumber = findViewById(R.id.receiver_phone_number);
+        mReceiverEmail = findViewById(R.id.receiver_email);
         mDestination = findViewById(R.id.pick_up_destination);
         mDateSendTxv = findViewById(R.id.date_send);
         mStatus = findViewById(R.id.parcelPaidSwitch);
@@ -74,32 +74,68 @@ public class AddItemActivity extends AppCompatActivity {
         FirebaseUser mCurrentUser = mAuth.getCurrentUser();
 
         mSave.setOnClickListener(view -> {
-            assert mCurrentUser != null;
-            SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, EEE");
-            SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
-            String date = formatter.format(mDateSend.getTime());
-            String time = timeFormatter.format(mDateSend.getTime());
-            TrackingItems trackingItems = new TrackingItems(
-                    mParcelID.getText().toString(),
-                    mParcelType.getText().toString(),
-                    mSender.getText().toString(),
-                    mReceiver.getText().toString(),
-                    mReceiverIDNumber.getText().toString(),
-                    mReceiverPhoneNumber.getText().toString(),
-                    date,
-                    time,
-                    "*****",
-                    "*****",
-                    mDestination.getText().toString(),
-                    mStatus.isChecked()
-            );
 
-            mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("items").add(trackingItems)
-                    .addOnSuccessListener(documentReference -> Toast.makeText(this, "Item added",
-                            Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(e -> Log.w("TAG", "Error writing document", e));
-            finish();
+            String parcelID = mParcelID.getText().toString();
+            String parcelType = mParcelType.getText().toString();
+            String sender = mSender.getText().toString();
+            String receiver = mReceiver.getText().toString();
+            String receiverEmail = mReceiverEmail.getText().toString();
+            String receiverIDNo = mReceiverIDNumber.getText().toString();
+            String destination = mDestination.getText().toString();
+            if (!parcelID.isEmpty() || !parcelType.isEmpty() || !sender.isEmpty()|| !receiver.isEmpty()|| !receiverEmail.isEmpty()||!receiverIDNo.isEmpty()||!destination.isEmpty()) {
+                String message = "Parcel ID " + parcelID + " has been sent to you by "
+                        + sender + " from ParcTr. You will be notified when it is received at our offices in "
+                        + destination + " for you to collect.";
+                final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+                emailIntent.setType("text/plain");
+                emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{mReceiverEmail.getText().toString()});
+                emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "ParcTr, Parcel Delivery.");
+                emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, message);
+
+
+                emailIntent.setType("message/rfc822");
+
+                try {
+                    startActivity(Intent.createChooser(emailIntent,
+                            "Send email using..."));
+                } catch (android.content.ActivityNotFoundException ex) {
+                    Toast.makeText(this,
+                            "No email clients installed.",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+
+                assert mCurrentUser != null;
+                SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, EEE");
+                SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+                String date = formatter.format(mDateSend.getTime());
+                String time = timeFormatter.format(mDateSend.getTime());
+                TrackingItems trackingItems = new TrackingItems(
+                        parcelID,
+                        parcelType,
+                        sender,
+                        receiver,
+                        receiverIDNo,
+                        receiverEmail,
+                        date,
+                        time,
+                        "*****",
+                        "*****",
+                        destination,
+                        mStatus.isChecked()
+                );
+
+                mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("items").add(trackingItems)
+                        .addOnSuccessListener(documentReference -> Toast.makeText(this, "Item added",
+                                Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e -> Log.w("TAG", "Error writing document", e));
+                finish();
+            }else {
+                Toast.makeText(this, "Fill in all the fields.",
+                        Toast.LENGTH_SHORT).show();
+            }
         });
+
         mScanCode.setOnClickListener(view12 -> {
             if (hasCameraPermission()) {
                 IntentIntegrator integrator = new IntentIntegrator(this);
@@ -109,6 +145,7 @@ public class AddItemActivity extends AppCompatActivity {
                 integrator.initiateScan();
             }
         });
+
 
     }
 
