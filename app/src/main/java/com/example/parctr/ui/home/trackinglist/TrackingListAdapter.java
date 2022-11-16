@@ -104,7 +104,7 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
         holder.mParcelPickedSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!holder.mParcelPickedSwitch.isChecked()) {
+                if (Objects.equals(mValues.get(position).getPickUpTime(), "*****")) {
                     assert mCurrentUser != null;
                     DocumentReference trackingItem = mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("items").document(mValues.get(holder.getLayoutPosition()).getDocID());
                     trackingItem.get().addOnSuccessListener(documentSnapshot -> {
@@ -130,6 +130,8 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
                         notifyDataSetChanged();
                     });
 
+                }else {
+                    Toast.makeText(view.getContext(), "You can't update an archived item.", Toast.LENGTH_LONG).show();
                 }
             }
         });

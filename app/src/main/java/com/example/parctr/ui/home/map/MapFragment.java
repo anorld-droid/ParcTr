@@ -315,33 +315,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
 
 
-    private void getNearbyParks() {
 
-        StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-
-        googlePlacesUrl.append("location=" + latitude + "," + longitude);
-
-        googlePlacesUrl.append("&radius=" + PROXIMITY_RADIUS);
-
-        googlePlacesUrl.append("&type=parking");
-
-        googlePlacesUrl.append("&sensor=true");
-
-        googlePlacesUrl.append("&key=" + "TODO: add API key"); //TODO: add API key
-
-        String url = googlePlacesUrl.toString();
-
-        Object dataTransfer[] = new Object[2];
-
-        dataTransfer[0]= mMap;
-
-        dataTransfer[1]= url;
-
-        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
-
-        getNearbyPlacesData.execute(dataTransfer);
-
-    }
 
 
 
