@@ -1,10 +1,15 @@
-package com.anorlddroid.parctr.ui.home.addItem;
+package com.anorlddroid.parctr.ui.home.driver.addItem;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.app.Notification;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,12 +26,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.anorlddroid.parctr.model.TrackingItems;
 import com.anorlddroid.parctr.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -36,6 +44,7 @@ import java.util.Calendar;
 
 public class AddItemActivity extends AppCompatActivity {
     private static final int REQUEST_CAMERA_PERMISSION_RESULT = 1;
+    private static final int REQUEST_LOCATION = 1;
     final Calendar mDateSend = Calendar.getInstance();
     private EditText mParcelID;
     private EditText mParcelType;
@@ -51,10 +60,17 @@ public class AddItemActivity extends AppCompatActivity {
     private Button mSave;
     private Button mScanCode;
 
+    private FirebaseUser mCurrentUser;
+
+
+    private double lat;
+    private double lng;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -66,7 +82,7 @@ public class AddItemActivity extends AppCompatActivity {
         mDatabase = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
-        mParcelID = findViewById(R.id.parcel_id);
+        mParcelID = findViewById(R.id.my_parcel_id);
         mParcelType = findViewById(R.id.type_parcel);
         mSender = findViewById(R.id.sender);
         mReceiver = findViewById(R.id.receiver);
@@ -77,7 +93,9 @@ public class AddItemActivity extends AppCompatActivity {
         mStatus = findViewById(R.id.parcelPaidSwitch);
         mSave = findViewById(R.id.save);
         mScanCode = findViewById(R.id.scan_code);
-        FirebaseUser mCurrentUser = mAuth.getCurrentUser();
+        mCurrentUser= mAuth.getCurrentUser();
+
+        getLocation();
 
         mSave.setOnClickListener(view -> {
 
@@ -117,7 +135,7 @@ public class AddItemActivity extends AppCompatActivity {
                 String date = formatter.format(mDateSend.getTime());
                 String time = timeFormatter.format(mDateSend.getTime());
                 TrackingItems trackingItems = new TrackingItems(
-                        parcelID,
+                        mParcelID.getText().toString(),
                         parcelType,
                         sender,
                         receiver,
@@ -128,13 +146,15 @@ public class AddItemActivity extends AppCompatActivity {
                         "*****",
                         "*****",
                         destination,
-                        mStatus.isChecked()
+                        mStatus.isChecked(),
+                        lat + " " +lng
                 );
 
                 mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("items").add(trackingItems)
                         .addOnSuccessListener(documentReference -> Toast.makeText(this, "Item added",
                                 Toast.LENGTH_SHORT).show())
                         .addOnFailureListener(e -> Log.w("TAG", "Error writing document", e));
+                saveToFirestore(mParcelID.getText().toString(), trackingItems);
                 finish();
             } else {
                 Toast.makeText(this, "Fill in all the fields.",
@@ -151,9 +171,9 @@ public class AddItemActivity extends AppCompatActivity {
                 integrator.initiateScan();
             }
         });
-
-
     }
+
+
 
     public void dateSend(View view) {
         new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
@@ -199,7 +219,10 @@ public class AddItemActivity extends AppCompatActivity {
         if (result != null) {
             if (result.getContents() != null) {
                 Toast.makeText(this, getString(R.string.main_menu_scanned_text) + " " + result.getContents(), Toast.LENGTH_SHORT).show();
-                mParcelID.setText(result.getContents());
+
+                    mParcelID.setText(result.getContents());
+
+
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -217,4 +240,32 @@ public class AddItemActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private void saveToFirestore(String parcelID, TrackingItems trackingItems){
+        String[] name = trackingItems.getReceiver().split(" ");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Parcels")
+                .child(name[0]+name[1]);
+
+        reference.child(parcelID).setValue(trackingItems);
+    }
+
+    private void getLocation() {
+        if (ActivityCompat.checkSelfPermission(
+                AddItemActivity.this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                AddItemActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+        } else {
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+            Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (locationGPS != null) {
+                lat = locationGPS.getLatitude();
+               lng = locationGPS.getLongitude();
+            } else {
+                Toast.makeText(this, "Unable to find location.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 }
+

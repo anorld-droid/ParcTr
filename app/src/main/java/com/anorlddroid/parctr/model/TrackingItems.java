@@ -43,9 +43,12 @@ public class TrackingItems {
     @SerializedName("status")
     @Expose
     private Boolean status;
+    @SerializedName("driver_location")
+    @Expose
+    private String driverLocation;
 
     public TrackingItems(
-            String id, String typeOfParcel, String sender, String receiver, String receiverIDNumber, String receiverPhoneNumber, String dateSend, String timeSend, String pickUpDate, String pickUpTime, String pickUpDestination, Boolean status) {
+            String id, String typeOfParcel, String sender, String receiver, String receiverIDNumber, String receiverPhoneNumber, String dateSend, String timeSend, String pickUpDate, String pickUpTime, String pickUpDestination, Boolean status, String driverLocation) {
         this.id = id;
         this.typeOfParcel = typeOfParcel;
         this.sender = sender;
@@ -58,6 +61,7 @@ public class TrackingItems {
         this.pickUpTime = pickUpTime;
         this.pickUpDestination = pickUpDestination;
         this.status = status;
+        this.driverLocation = driverLocation;
     }
 
     public TrackingItems() {
@@ -166,5 +170,13 @@ public class TrackingItems {
 
     public String getReceiverIDNumber() {
         return receiverIDNumber;
+    }
+
+    public String getDriverLocation() {
+        return driverLocation;
+    }
+
+    public void setDriverLocation(String driverLocation) {
+        this.driverLocation = driverLocation;
     }
 }

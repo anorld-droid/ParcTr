@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,7 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.anorlddroid.parctr.R;
 import com.anorlddroid.parctr.domain.BasicUtils;
 import com.anorlddroid.parctr.model.User;
-import com.anorlddroid.parctr.ui.home.HomeActivity;
+import com.anorlddroid.parctr.ui.home.client.items.ItemsActivity;
+import com.anorlddroid.parctr.ui.home.driver.HomeActivity;
 import com.anorlddroid.parctr.ui.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,6 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
     private BasicUtils utils = new BasicUtils();
     private FirebaseAuth mAuth;
     private FirebaseFirestore mDatabase;
+    private Switch clientSwitch;
 
 
     @Override
@@ -45,6 +48,8 @@ public class RegisterActivity extends AppCompatActivity {
         email = findViewById(R.id.emailField);
         password = findViewById(R.id.passwordField);
         registerBtn = findViewById(R.id.registerBtn);
+        clientSwitch = findViewById(R.id.client_switch_reg);
+
         loginSwitchText = findViewById(R.id.loginSwitchText);
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseFirestore.getInstance();
@@ -52,16 +57,6 @@ public class RegisterActivity extends AppCompatActivity {
         sanitizeInput();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            Intent intent = new Intent(this, HomeActivity.class);
-            startActivity(intent);
-        }
-    }
 
     private void sanitizeInput() {
         registerBtn.setOnClickListener(view -> {
@@ -86,7 +81,14 @@ public class RegisterActivity extends AppCompatActivity {
                 progressDialog.setCancelable(false);
                 progressDialog.show();
                 signUpUser(txt_email, txt_password, txt_name, txt_contact_no);
-                Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
+                Intent intent;
+                if (clientSwitch.isChecked()){
+                    intent =  new Intent(RegisterActivity.this, ItemsActivity.class);
+                }else{
+                    intent =  new Intent(RegisterActivity.this, HomeActivity.class);
+
+                }
+
                 startActivity(intent);
                 finish();
             } else {
@@ -113,6 +115,7 @@ public class RegisterActivity extends AppCompatActivity {
                         user.setEmail(txt_email);
                         user.setName(txt_name);
                         user.setPhone(txt_contact_no);
+                        user.setType(clientSwitch.isChecked() ? "Client" : "Driver");
                         addUserToDB(user, Objects.requireNonNull(task.getResult().getUser()).getUid());
                     } else {
                         // If sign in fails, display a message to the user.

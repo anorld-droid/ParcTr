@@ -8,18 +8,29 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.anorlddroid.parctr.R;
 import com.anorlddroid.parctr.domain.BasicUtils;
-import com.anorlddroid.parctr.ui.home.HomeActivity;
+import com.anorlddroid.parctr.model.TrackingItems;
+import com.anorlddroid.parctr.model.User;
+import com.anorlddroid.parctr.ui.home.client.items.ItemsActivity;
+import com.anorlddroid.parctr.ui.home.driver.HomeActivity;
 import com.anorlddroid.parctr.ui.registration.RegisterActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
     private final String TAG = "LOGIN/ACT";
@@ -31,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView registerSwitchText;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mDatabase;
+    private boolean isClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         email = findViewById(R.id.emailField);
         password = findViewById(R.id.passwordField);
         loginBtn = findViewById(R.id.loginBtn);
+
         registerSwitchText = findViewById(R.id.registerSwitchText);
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseFirestore.getInstance();
@@ -52,10 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-            startActivity(intent);
-            finish();
-            Toast.makeText(LoginActivity.this, "Log in success.", Toast.LENGTH_SHORT).show();
+            getUserCredentials(currentUser.getUid());
         }
     }
 
@@ -99,10 +109,7 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithEmail:success");
-                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                        startActivity(intent);
-                        finish();
+                        getUserCredentials(Objects.requireNonNull(task.getResult().getUser()).getUid());
                         Toast.makeText(LoginActivity.this, "Log in success.", Toast.LENGTH_SHORT).show();
                     } else {
                         // If sign in fails, display a message to the user.
@@ -111,6 +118,32 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
                         if (progressDialog != null) {
                             progressDialog.dismiss();
+
+                        }
+                    }
+                });
+    }
+    private  void getUserCredentials(String userID){
+        mDatabase.collection("users").document(userID).collection("userDetails").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()){
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                if (document.exists()){
+                                    User user = document.toObject(User.class);
+                                    Intent intent;
+                                    if (user.getType().equals("Client")){
+                                        intent = new Intent(LoginActivity.this, ItemsActivity.class);
+                                    }else{
+                                        intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                    }
+                                    startActivity(intent);
+                                    finish();
+                                    Toast.makeText(LoginActivity.this, "Log in success.", Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
 
                         }
                     }

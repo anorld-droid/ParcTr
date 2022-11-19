@@ -8,22 +8,22 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.anorlddroid.parctr.ui.home.map.MapFragment"
+        android:name="com.anorlddroid.parctr.ui.home.driver.map.MapFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_map" />
     <fragment
         android:id="@+id/navigation_tracklist"
-        android:name="com.anorlddroid.parctr.ui.home.trackinglist.TrackingFragment"
+        android:name="com.anorlddroid.parctr.ui.home.driver.trackinglist.TrackingFragment"
         android:label="@string/track_list"
         tools:layout="@layout/fragment_tracking_list" />
     <activity
         android:id="@+id/archive"
-        android:name="com.anorlddroid.parctr.ui.home.archive.ArchiveActivity"
+        android:name="com.anorlddroid.parctr.ui.home.driver.archive.ArchiveActivity"
         android:label="activity_archive"
         tools:layout="@layout/activity_archive" />
     <activity
         android:id="@+id/add_parcel"
-        android:name="com.anorlddroid.parctr.ui.home.addItem.AddItemActivity"
+        android:name="com.anorlddroid.parctr.ui.home.driver.addItem.AddItemActivity"
         android:label="AddItemActivity" />
 
     <activity

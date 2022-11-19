@@ -1,24 +1,22 @@
-package com.anorlddroid.parctr.ui.home.archive;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+package com.anorlddroid.parctr.ui.home.driver.trackinglist;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.anorlddroid.parctr.R;
 import com.anorlddroid.parctr.model.TrackingItems;
-import com.anorlddroid.parctr.ui.home.addItem.AddItemActivity;
-import com.anorlddroid.parctr.ui.home.trackinglist.TrackingListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,32 +27,29 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class ArchiveActivity extends AppCompatActivity {
+/**
+ * A fragment representing a list of Items.
+ */
+public class TrackingFragment extends Fragment {
     private ProgressBar progressBar;
-
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_archive);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.fragment_tracking_list, container, false);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Archive");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        progressBar = findViewById(R.id.loading_bar);
+        progressBar = view.findViewById(R.id.progress_bar);
+        Button mUpdateLocation = view.findViewById(R.id.update_location);
+
         progressBar.setVisibility(View.VISIBLE);
 
         List<TrackingItems> trackingItems = new ArrayList<TrackingItems>();
 
-        RecyclerView recyclerView = findViewById(R.id.archived_list);
-        TrackingListAdapter trackingListAdapter = new TrackingListAdapter(trackingItems);
+        RecyclerView recyclerView = view.findViewById(R.id.list);
+        TrackingListAdapter trackingListAdapter = new TrackingListAdapter(getContext(), trackingItems);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
 
         FirebaseFirestore mDatabase = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -62,7 +57,7 @@ public class ArchiveActivity extends AppCompatActivity {
         FirebaseUser mCurrentUser = mAuth.getCurrentUser();
 
         assert mCurrentUser != null;
-        Task<QuerySnapshot> collectionRef = mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("archive").get();
+        Task<QuerySnapshot> collectionRef = mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("items").get();
         collectionRef.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -76,11 +71,12 @@ public class ArchiveActivity extends AppCompatActivity {
                             trackingListAdapter.notifyDataSetChanged();
                             Log.d("TAG", document.getId() + " => " + document.toObject(TrackingItems.class));
                         }
+
                     }
                     progressBar.setVisibility(View.INVISIBLE);
 
                 } else {
-                    Toast.makeText(getApplicationContext(), "Failed to retrieve items", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity().getApplicationContext(), "Failed to retrieve items", Toast.LENGTH_LONG).show();
                     Log.d("TAG", "Error getting documents: ", task.getException());
                     progressBar.setVisibility(View.GONE);
 
@@ -92,17 +88,21 @@ public class ArchiveActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         recyclerView.setAdapter(trackingListAdapter);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        mUpdateLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (trackingItems != null) {
+                    for (TrackingItems trackingItem : trackingItems
+                    ) {
+                        trackingListAdapter.updateLocation(trackingItem);
+                    }
 
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+                }
+            }
+        });
+
+        return view;
+
     }
 }

@@ -1,11 +1,10 @@
-package com.anorlddroid.parctr.ui.home;
+package com.anorlddroid.parctr.ui.home.driver;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,10 +19,9 @@ import androidx.navigation.NavGraph;
 import androidx.navigation.Navigation;
 
 import com.anorlddroid.parctr.R;
-import com.anorlddroid.parctr.model.TrackingItems;
 import com.anorlddroid.parctr.model.User;
-import com.anorlddroid.parctr.ui.home.addItem.AddItemActivity;
-import com.anorlddroid.parctr.ui.home.archive.ArchiveActivity;
+import com.anorlddroid.parctr.ui.home.driver.addItem.AddItemActivity;
+import com.anorlddroid.parctr.ui.home.driver.archive.ArchiveActivity;
 import com.anorlddroid.parctr.ui.login.LoginActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

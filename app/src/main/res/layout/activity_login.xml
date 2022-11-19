@@ -133,6 +133,21 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="@dimen/spacing_large" />
+            <Switch
+                android:id="@+id/client_switch_reg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:nextFocusForward="@+id/productPageET"
+                android:singleLine="true"
+                android:text="@string/client"
+
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/spacing_large" />
 
               <com.google.android.material.button.MaterialButton
                 android:id="@+id/loginBtn"

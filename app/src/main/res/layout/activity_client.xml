@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.home.client.MapActivity">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#Be5025"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <fragment
         android:id="@+id/map"
@@ -14,9 +26,9 @@
         map:layout_constraintEnd_toEndOf="parent"
         map:layout_constraintHorizontal_bias="0.0"
         map:layout_constraintStart_toStartOf="parent"
-        map:layout_constraintTop_toTopOf="parent"
+        map:layout_constraintTop_toBottomOf="@id/toolbar"
         map:layout_constraintVertical_bias="0.0"
-        tools:context=".ui.home.driver.map.Location" />
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

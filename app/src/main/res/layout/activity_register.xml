@@ -189,16 +189,27 @@
 
 
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="@dimen/spacing_medium" />
-
 
 
             <View
                 android:layout_width="0dp"
-                android:layout_height="@dimen/spacing_xmlarge" />
+                android:layout_height="@dimen/spacing_mlarge" />
 
+            <Switch
+                android:id="@+id/client_switch_reg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:nextFocusForward="@+id/productPageET"
+                android:singleLine="true"
+                android:text="@string/client"
+
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/spacing_mlarge" />
             <Button
                 android:id="@+id/registerBtn"
                 android:layout_width="match_parent"

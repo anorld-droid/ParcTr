@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.anorlddroid.parctr">
+    package="com.anorlddroid.parctr" >
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -17,25 +17,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:targetApi="31">
+        tools:targetApi="31" >
         <activity
-            android:name=".ui.home.archive.ArchiveActivity"
+            android:name=".ui.home.client.items.ItemsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.MainActivity"
-            android:exported="true"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".ui.home.driver.map.LocationActivity"
+            android:exported="false" />
         <activity
-            android:name=".ui.home.addItem.BarcodeCaptureActivity"
+            android:name=".ui.home.client.MapActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.driver.archive.ArchiveActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.driver.addItem.BarcodeCaptureActivity"
             android:screenOrientation="fullSensor"
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".ui.home.addItem.AddItemActivity"
+            android:name=".ui.home.driver.addItem.AddItemActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.home.HomeActivity"
+            android:name=".ui.home.driver.HomeActivity"
             android:exported="false" />
         <activity
             android:name=".ui.login.LoginActivity"

@@ -1,9 +1,15 @@
-package com.anorlddroid.parctr.ui.home.trackinglist;
+package com.anorlddroid.parctr.ui.home.driver.trackinglist;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +20,15 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anorlddroid.parctr.databinding.FragmentTrackingBinding;
 import com.anorlddroid.parctr.model.TrackingItems;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.BarcodeFormat;
@@ -41,14 +50,38 @@ import java.util.Objects;
  */
 public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapter.ViewHolder> {
 
+    /**************************************************************
+     * getting from com.google.zxing.client.android.encode.QRCodeEncoder
+     *
+     * See the sites below
+     * http://code.google.com/p/zxing/
+     * http://code.google.com/p/zxing/source/browse/trunk/android/src/com/google/zxing/client/android/encode/EncodeActivity.java
+     * http://code.google.com/p/zxing/source/browse/trunk/android/src/com/google/zxing/client/android/encode/QRCodeEncoder.java
+     */
+
+    private static final int WHITE = 0xFFFFFFFF;
+    private static final int BLACK = 0xFF000000;
     private final List<TrackingItems> mValues;
     private FirebaseFirestore mDatabase;
     private FirebaseAuth mAuth;
-    private  FirebaseUser mCurrentUser;
+    private FirebaseUser mCurrentUser;
+    private Context context;
+    private double lat;
+    private double lng;
 
-
-    public TrackingListAdapter(List<TrackingItems> items) {
+    public TrackingListAdapter(Context context, List<TrackingItems> items) {
+        this.context = context;
         mValues = items;
+    }
+
+    private static String guessAppropriateEncoding(CharSequence contents) {
+        // Very crude at the moment
+        for (int i = 0; i < contents.length(); i++) {
+            if (contents.charAt(i) > 0xFF) {
+                return "UTF-8";
+            }
+        }
+        return null;
     }
 
     @Override
@@ -81,51 +114,70 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onClick(View view) {
-
-
                 sendEmail(mValues.get(holder.getLayoutPosition()).getId(), mValues.get(holder.getLayoutPosition()).getPickUpDestination(), mValues.get(holder.getLayoutPosition()).getReceiverPhoneNumber(), view.getContext());
                 Toast.makeText(view.getContext(), "Receiver notified", Toast.LENGTH_LONG).show();
                 notifyDataSetChanged();
             }
         });
 
-        holder.mParcelPickedSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Objects.equals(mValues.get(holder.getLayoutPosition()).getPickUpTime(), "*****")) {
-                    assert mCurrentUser != null;
-                    DocumentReference trackingItem = mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("items").document(mValues.get(holder.getLayoutPosition()).getDocID());
-                    trackingItem.get().addOnSuccessListener(documentSnapshot -> {
-                        TrackingItems trIt = documentSnapshot.toObject(TrackingItems.class);
-                        assert trIt != null;
-                        SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, EEE");
-                        SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
-                        Date now = new Date();
-                        String date = formatter.format(now);
-                        String time = timeFormatter.format(now);
-                        Boolean status = !(trIt.getStatus());
-                        trackingItem
-                                .update("status", status, "pickUpDate", date, "pickUpTime", time)
-                                .addOnSuccessListener(aVoid -> Log.d("TAG", "DocumentSnapshot successfully updated!"))
-                                .addOnFailureListener(e -> Log.w("TAG", "Error updating document", e));
-                        trIt.setDocID(mValues.get(holder.getLayoutPosition()).getDocID());
-                        trIt.setStatus(status);
-                        trIt.setPickUpDate(date);
-                        trIt.setPickUpTime(time);
-                        Toast.makeText(view.getContext(), "Pick up time updated", Toast.LENGTH_LONG).show();
-                        archiveItem(trIt, view.getContext());
-                        holder.mDelivered.setVisibility(View.GONE);
-                        notifyDataSetChanged();
-                    });
+        holder.mParcelPickedSwitch.setOnClickListener(view -> {
+            if (Objects.equals(mValues.get(holder.getLayoutPosition()).getPickUpTime(), "*****")) {
+                assert mCurrentUser != null;
+                DocumentReference trackingItem = mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("items").document(mValues.get(holder.getLayoutPosition()).getDocID());
+                trackingItem.get().addOnSuccessListener(documentSnapshot -> {
+                    TrackingItems trIt = documentSnapshot.toObject(TrackingItems.class);
+                    assert trIt != null;
+                    SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, EEE");
+                    SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+                    Date now = new Date();
+                    String date = formatter.format(now);
+                    String time = timeFormatter.format(now);
+                    Boolean status = !(trIt.getStatus());
+                    trackingItem
+                            .update("status", status, "pickUpDate", date, "pickUpTime", time)
+                            .addOnSuccessListener(aVoid -> Log.d("TAG", "DocumentSnapshot successfully updated!"))
+                            .addOnFailureListener(e -> Log.w("TAG", "Error updating document", e));
+                    trIt.setDocID(mValues.get(holder.getLayoutPosition()).getDocID());
+                    trIt.setStatus(status);
+                    trIt.setPickUpDate(date);
+                    trIt.setPickUpTime(time);
+                    Toast.makeText(view.getContext(), "Pick up time updated", Toast.LENGTH_LONG).show();
+                    archiveItem(trIt, view.getContext());
+                    holder.mDelivered.setVisibility(View.GONE);
+                    notifyDataSetChanged();
+                });
 
-                }else {
-                    Toast.makeText(view.getContext(), "You can't update an archived item.", Toast.LENGTH_LONG).show();
-                }
+            } else {
+                Toast.makeText(view.getContext(), "You can't update an archived item.", Toast.LENGTH_LONG).show();
             }
         });
 
     }
-    private void sendEmail(String parcelID, String destination, String receiverEmail, Context context){
+
+    private void getLocation(Context context) {
+
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            Toast.makeText(context, "Location permission denied.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (locationGPS != null) {
+            lat = locationGPS.getLatitude();
+            lng = locationGPS.getLongitude();
+        }
+    }
+
+    public void updateLocation(TrackingItems trackingItem) {
+        getLocation(context);
+        String[] name = trackingItem.getReceiver().split(" ");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Parcels")
+                .child(name[0] + name[1]);
+        reference.child(trackingItem.getId()).child("driverLocation").setValue(lat + " " + lng);
+    }
+
+    private void sendEmail(String parcelID, String destination, String receiverEmail, Context context) {
         String message = "Parcel ID " + parcelID + " has been received at ParcTr  "
                 + destination + " office. You can now collect it anytime with your National ID.";
         final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
@@ -153,56 +205,14 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public TrackingItems mItem;
-        public final TextView mIdView;
-        public final ImageView mBarcode;
-        public final TextView mTypeOfParcel;
-        public final TextView mSender;
-        public final TextView mReceiver;
-        public final TextView mDateSend;
-        public final TextView mTimeSend;
-        public final TextView mPickUpDate;
-        public final TextView mPickUpTime;
-        public final TextView mPickUpDestination;
-        public final Switch mParcelPickedSwitch;
-        public final Button mDelivered;
-
-
-        public ViewHolder(FragmentTrackingBinding binding) {
-            super(binding.getRoot());
-            mIdView = binding.parcelId;
-            mBarcode = binding.barCode;
-            mTypeOfParcel = binding.typeParcelValue;
-            mSender = binding.senderValue;
-            mReceiver = binding.receiverValue;
-            mDateSend = binding.dateSend;
-            mTimeSend = binding.timeSend;
-            mPickUpDate = binding.pickUpDate;
-            mPickUpTime = binding.pickUpTime;
-            mPickUpDestination = binding.pickUpDestination;
-            mParcelPickedSwitch = binding.parcelPaidSwitch;
-
-            mDelivered = binding.delivered;
-
-            mDatabase = FirebaseFirestore.getInstance();
-            mAuth = FirebaseAuth.getInstance();
-
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mTypeOfParcel.getText() + "'";
-        }
-    }
-
     private void archiveItem(TrackingItems trackingItem, Context context) {
         mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("archive").add(trackingItem)
                 .addOnSuccessListener(documentReference -> Toast.makeText(context, "Item archived",
                         Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> Log.w("TAG", "Error writing document"));
         mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("items").document(trackingItem.getDocID()).delete()
-                .addOnSuccessListener(documentReference -> {})
+                .addOnSuccessListener(documentReference -> {
+                })
                 .addOnFailureListener(e -> Log.w("TAG", "Error writing document", e));
     }
 
@@ -217,18 +227,6 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
             e.printStackTrace();
         }
     }
-
-    /**************************************************************
-     * getting from com.google.zxing.client.android.encode.QRCodeEncoder
-     *
-     * See the sites below
-     * http://code.google.com/p/zxing/
-     * http://code.google.com/p/zxing/source/browse/trunk/android/src/com/google/zxing/client/android/encode/EncodeActivity.java
-     * http://code.google.com/p/zxing/source/browse/trunk/android/src/com/google/zxing/client/android/encode/QRCodeEncoder.java
-     */
-
-    private static final int WHITE = 0xFFFFFFFF;
-    private static final int BLACK = 0xFF000000;
 
     Bitmap encodeAsBitmap(String contents) throws WriterException {
         if (contents == null) {
@@ -264,15 +262,49 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
         return bitmap;
     }
 
-    private static String guessAppropriateEncoding(CharSequence contents) {
-        // Very crude at the moment
-        for (int i = 0; i < contents.length(); i++) {
-            if (contents.charAt(i) > 0xFF) {
-                return "UTF-8";
-            }
-        }
-        return null;
-    }
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public final TextView mIdView;
+        public final ImageView mBarcode;
+        public final TextView mTypeOfParcel;
+        public final TextView mSender;
+        public final TextView mReceiver;
+        public final TextView mDateSend;
+        public final TextView mTimeSend;
+        public final TextView mPickUpDate;
+        public final TextView mPickUpTime;
+        public final TextView mPickUpDestination;
+        public final Switch mParcelPickedSwitch;
+        public final Button mDelivered;
 
+        public TrackingItems mItem;
+
+
+
+        public ViewHolder(FragmentTrackingBinding binding) {
+            super(binding.getRoot());
+            mIdView = binding.parcelId;
+            mBarcode = binding.barCode;
+            mTypeOfParcel = binding.typeParcelValue;
+            mSender = binding.senderValue;
+            mReceiver = binding.receiverValue;
+            mDateSend = binding.dateSend;
+            mTimeSend = binding.timeSend;
+            mPickUpDate = binding.pickUpDate;
+            mPickUpTime = binding.pickUpTime;
+            mPickUpDestination = binding.pickUpDestination;
+            mParcelPickedSwitch = binding.parcelPaidSwitch;
+
+            mDelivered = binding.delivered;
+
+
+            mDatabase = FirebaseFirestore.getInstance();
+            mAuth = FirebaseAuth.getInstance();
+        }
+
+        @Override
+        public String toString() {
+            return super.toString() + " '" + mTypeOfParcel.getText() + "'";
+        }
+    }
 
 }
