@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "903139955979",
-    "project_id": "parctr-1c329",
-    "storage_bucket": "parctr-1c329.appspot.com"
+    "project_number": "140900485603",
+    "project_id": "parceltracking-f8989",
+    "storage_bucket": "parceltracking-f8989.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:903139955979:android:a3bd0452e9d2b85865be0e",
+        "mobilesdk_app_id": "1:140900485603:android:34e947a02cc23cf7a5b8d6",
         "android_client_info": {
           "package_name": "com.example.parctr"
         }
       },
       "oauth_client": [
         {
-          "client_id": "903139955979-auaq02gkf826ed8jhe1rj17ophk70utl.apps.googleusercontent.com",
+          "client_id": "140900485603-h9eqom5jsdlcs26a9fudufcgnodabdr5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCag0_vYhITZ9-olgSTdBYckEqFLLGyd88"
+          "current_key": "AIzaSyAUyiJM7Aag1o01mKT0ctFMJpoHsO8my_M"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "903139955979-auaq02gkf826ed8jhe1rj17ophk70utl.apps.googleusercontent.com",
+              "client_id": "140900485603-h9eqom5jsdlcs26a9fudufcgnodabdr5.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
