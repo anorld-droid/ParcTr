@@ -21,6 +21,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Objects;
+
 
 final
 public class RegisterActivity extends AppCompatActivity {
@@ -111,9 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
                         user.setEmail(txt_email);
                         user.setName(txt_name);
                         user.setPhone(txt_contact_no);
-
-
-                        addUserToDB(user, task.getResult().getUser().getUid());
+                        addUserToDB(user, Objects.requireNonNull(task.getResult().getUser()).getUid());
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -127,5 +127,13 @@ public class RegisterActivity extends AppCompatActivity {
         mDatabase.collection("users").document(userID).collection("userDetails").add(user)
                 .addOnSuccessListener(documentReference -> Log.d("TAG", "DocumentSnapshot successfully written!"))
                 .addOnFailureListener(e -> Log.w("TAG", "Error writing document", e));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (progressDialog != null){
+            progressDialog.dismiss();
+        }
     }
 }
