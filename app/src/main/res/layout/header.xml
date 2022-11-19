@@ -34,20 +34,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <TextView
-        android:id="@+id/nav_user_bloodgroups"
-        android:text="bloodgroups"
-
+        android:id="@+id/nav_phone_number"
+        android:text=""
         android:textSize="16sp"
         android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <TextView
         android:id="@+id/nav_user_type"
-        android:text="type"
+        android:text="@string/driver"
         android:textSize="16sp"
         android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-
 
 </LinearLayout>

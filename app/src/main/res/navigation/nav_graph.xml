@@ -3,32 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@+id/navigation_tracklist">
+    app:startDestination="@+id/navigation_home">
 
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.parctr.ui.home.map.MapFragment"
+        android:name="com.anorlddroid.parctr.ui.home.map.MapFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_map" >
-    </fragment>
+        tools:layout="@layout/fragment_map" />
     <fragment
         android:id="@+id/navigation_tracklist"
-        android:name="com.example.parctr.ui.home.trackinglist.TrackingFragment"
+        android:name="com.anorlddroid.parctr.ui.home.trackinglist.TrackingFragment"
         android:label="@string/track_list"
         tools:layout="@layout/fragment_tracking_list" />
     <activity
         android:id="@+id/archive"
-        android:name="com.example.parctr.ui.home.archive.ArchiveActivity"
+        android:name="com.anorlddroid.parctr.ui.home.archive.ArchiveActivity"
         android:label="activity_archive"
         tools:layout="@layout/activity_archive" />
     <activity
         android:id="@+id/add_parcel"
-        android:name="com.example.parctr.ui.home.addItem.AddItemActivity"
+        android:name="com.anorlddroid.parctr.ui.home.addItem.AddItemActivity"
         android:label="AddItemActivity" />
+
     <activity
         android:id="@+id/logout"
-        android:name="com.example.parctr.ui.login.LoginActivity"
+        android:name="com.anorlddroid.parctr.ui.login.LoginActivity"
         android:label="activity_login"
         tools:layout="@layout/activity_login" />
 
