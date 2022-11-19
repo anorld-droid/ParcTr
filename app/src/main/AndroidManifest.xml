@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.parctr">
+    package="com.anorlddroid.parctr">
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -50,7 +50,6 @@
         <activity
             android:name=".ui.registration.RegisterActivity"
             android:exported="true" />
-        <activity android:name=".ui.home.map.Location" />
 
         <meta-data
             android:name="preloaded_fonts"
@@ -60,7 +59,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDe_1C_EEgiAUhGRjrTgt6x3k32PD2fwg8" />
+            android:value="AIzaSyDefh-zW7dl9yMbLax127yR57VIreiaw6E" />
     </application>
 
 </manifest>

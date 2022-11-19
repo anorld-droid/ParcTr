@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_tracklist">
 
 
     <fragment
@@ -17,4 +17,19 @@
         android:name="com.example.parctr.ui.home.trackinglist.TrackingFragment"
         android:label="@string/track_list"
         tools:layout="@layout/fragment_tracking_list" />
+    <activity
+        android:id="@+id/archive"
+        android:name="com.example.parctr.ui.home.archive.ArchiveActivity"
+        android:label="activity_archive"
+        tools:layout="@layout/activity_archive" />
+    <activity
+        android:id="@+id/add_parcel"
+        android:name="com.example.parctr.ui.home.addItem.AddItemActivity"
+        android:label="AddItemActivity" />
+    <activity
+        android:id="@+id/logout"
+        android:name="com.example.parctr.ui.login.LoginActivity"
+        android:label="activity_login"
+        tools:layout="@layout/activity_login" />
+
 </navigation>

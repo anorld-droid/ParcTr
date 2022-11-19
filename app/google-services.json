@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "730918450765",
-    "project_id": "parctr",
-    "storage_bucket": "parctr.appspot.com"
+    "project_number": "903139955979",
+    "project_id": "parctr-1c329",
+    "storage_bucket": "parctr-1c329.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:730918450765:android:5f4e658c932086fd1e0e04",
+        "mobilesdk_app_id": "1:903139955979:android:a3bd0452e9d2b85865be0e",
         "android_client_info": {
           "package_name": "com.example.parctr"
         }
       },
       "oauth_client": [
         {
-          "client_id": "730918450765-p68bkej1ivqq0js66cdlr4p2am70i915.apps.googleusercontent.com",
+          "client_id": "903139955979-auaq02gkf826ed8jhe1rj17ophk70utl.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyASbLwnM9gRw7i4XuAybczdmnaqqTxovbs"
+          "current_key": "AIzaSyCag0_vYhITZ9-olgSTdBYckEqFLLGyd88"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "730918450765-p68bkej1ivqq0js66cdlr4p2am70i915.apps.googleusercontent.com",
+              "client_id": "903139955979-auaq02gkf826ed8jhe1rj17ophk70utl.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
