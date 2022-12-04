@@ -20,7 +20,6 @@ import com.anorlddroid.parctr.ui.home.client.items.ItemsActivity;
 import com.anorlddroid.parctr.ui.home.driver.HomeActivity;
 import com.anorlddroid.parctr.ui.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
@@ -81,16 +80,6 @@ public class RegisterActivity extends AppCompatActivity {
                 progressDialog.setCancelable(false);
                 progressDialog.show();
                 signUpUser(txt_email, txt_password, txt_name, txt_contact_no);
-                Intent intent;
-                if (clientSwitch.isChecked()){
-                    intent =  new Intent(RegisterActivity.this, ItemsActivity.class);
-                }else{
-                    intent =  new Intent(RegisterActivity.this, HomeActivity.class);
-
-                }
-
-                startActivity(intent);
-                finish();
             } else {
                 Toast.makeText(RegisterActivity.this, "No Network Available!", Toast.LENGTH_SHORT).show();
             }
@@ -130,12 +119,21 @@ public class RegisterActivity extends AppCompatActivity {
         mDatabase.collection("users").document(userID).collection("userDetails").add(user)
                 .addOnSuccessListener(documentReference -> Log.d("TAG", "DocumentSnapshot successfully written!"))
                 .addOnFailureListener(e -> Log.w("TAG", "Error writing document", e));
+        Intent intent;
+        if (clientSwitch.isChecked()) {
+            intent = new Intent(RegisterActivity.this, ItemsActivity.class);
+        } else {
+            intent = new Intent(RegisterActivity.this, HomeActivity.class);
+
+        }
+        startActivity(intent);
+        finish();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (progressDialog != null){
+        if (progressDialog != null) {
             progressDialog.dismiss();
         }
     }

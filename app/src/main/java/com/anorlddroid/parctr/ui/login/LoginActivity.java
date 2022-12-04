@@ -111,6 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                         // Sign in success, update UI with the signed-in user's information
                         getUserCredentials(Objects.requireNonNull(task.getResult().getUser()).getUid());
                         Toast.makeText(LoginActivity.this, "Log in success.", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -141,10 +142,8 @@ public class LoginActivity extends AppCompatActivity {
                                     startActivity(intent);
                                     finish();
                                     Toast.makeText(LoginActivity.this, "Log in success.", Toast.LENGTH_SHORT).show();
-
                                 }
                             }
-
                         }
                     }
                 });

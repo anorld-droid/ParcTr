@@ -116,6 +116,7 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
             public void onClick(View view) {
                 sendEmail(mValues.get(holder.getLayoutPosition()).getId(), mValues.get(holder.getLayoutPosition()).getPickUpDestination(), mValues.get(holder.getLayoutPosition()).getReceiverPhoneNumber(), view.getContext());
                 Toast.makeText(view.getContext(), "Receiver notified", Toast.LENGTH_LONG).show();
+                deliveredItem(mValues.get(holder.getLayoutPosition()), context);
                 notifyDataSetChanged();
             }
         });
@@ -185,8 +186,6 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
         emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{receiverEmail});
         emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "ParcTr, Parcel Delivery.");
         emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, message);
-
-
         emailIntent.setType("message/rfc822");
 
         try {
@@ -214,6 +213,13 @@ public class TrackingListAdapter extends RecyclerView.Adapter<TrackingListAdapte
                 .addOnSuccessListener(documentReference -> {
                 })
                 .addOnFailureListener(e -> Log.w("TAG", "Error writing document", e));
+    }
+
+    private void deliveredItem(TrackingItems trackingItem, Context context) {
+        mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("delivered").add(trackingItem)
+                .addOnSuccessListener(documentReference -> Toast.makeText(context, "Item added to delivered",
+                        Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Log.w("TAG", "Error writing document"));
     }
 
     private void generateBarCode(final ViewHolder holder, String id) {

@@ -1,6 +1,7 @@
 package com.anorlddroid.parctr.ui.home.driver.map;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -9,8 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -30,6 +33,16 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback,
@@ -53,7 +66,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private int PROXIMITY_RADIUS = 10000;
-
+    private FirebaseFirestore mDatabase;
+    private FirebaseAuth mAuth;
+    private FirebaseUser mCurrentUser;
+    private TextView added, delivered, picked;
 
     public MapFragment() {
 
@@ -66,24 +82,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         root = inflater.inflate(R.layout.fragment_map, container, false);
+        mDatabase = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
+        mCurrentUser = mAuth.getCurrentUser();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
             checkLocationPermission();
 
         }
 
-        //Check if Google Play Services Available or not
-
-        if (!CheckGooglePlayServices()) {
-
-            Log.d("onCreate", "Finishing test case since Google Play Services are not available");
-
-        } else {
-
-            Log.d("onCreate", "Google Play Services available.");
-
-        }
+        added = root.findViewById(R.id.added);
+        delivered = root.findViewById(R.id.delivered);
+        picked = root.findViewById(R.id.picked_txt);
+        getAddedItems();
+        getDeliveredItems();
+        getPickedItems();
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -94,6 +108,86 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         return root;
 
+    }
+
+    private int getAddedItems() {
+        List<Integer> trackingItems = new ArrayList<Integer>();
+        Task<QuerySnapshot> collectionRef = mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("items").get();
+        collectionRef.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    int sum = 0;
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (document.exists()) {
+                            sum++;
+                            Log.d("!!!!!", "1");
+                        }
+
+                    }
+                    added.setText(String.valueOf(sum));
+
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "Failed to retrieve items", Toast.LENGTH_LONG).show();
+                    Log.d("TAG", "Error getting documents: ", task.getException());
+
+                }
+            }
+        });
+        return trackingItems.size();
+    }
+
+    private int getDeliveredItems() {
+        List<Integer> trackingItems = new ArrayList<Integer>();
+        Task<QuerySnapshot> collectionRef = mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("delivered").get();
+        collectionRef.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    int sum = 0;
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (document.exists()) {
+                            sum++;
+                        }
+
+                    }
+                    delivered.setText(String.valueOf(sum));
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "Failed to retrieve items", Toast.LENGTH_LONG).show();
+                    Log.d("TAG", "Error getting documents: ", task.getException());
+
+                }
+            }
+        });
+        return trackingItems.size();
+    }
+
+    private int getPickedItems() {
+        List<Integer> trackingItems = new ArrayList<Integer>();
+        Task<QuerySnapshot> collectionRef = mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("archive").get();
+        collectionRef.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    int sum = 0;
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (document.exists()) {
+                            sum++;
+                        }
+
+                    }
+                    picked.setText(String.valueOf(sum));
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "Failed to retrieve items", Toast.LENGTH_LONG).show();
+                    Log.d("TAG", "Error getting documents: ", task.getException());
+
+                }
+            }
+        });
+        return trackingItems.size();
     }
 
     private boolean CheckGooglePlayServices() {
