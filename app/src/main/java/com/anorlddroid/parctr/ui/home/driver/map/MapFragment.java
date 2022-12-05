@@ -70,6 +70,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private FirebaseAuth mAuth;
     private FirebaseUser mCurrentUser;
     private TextView added, delivered, picked;
+    private int tSum = 0;
 
     public MapFragment() {
 
@@ -112,7 +113,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     private int getAddedItems() {
         List<Integer> trackingItems = new ArrayList<Integer>();
-        Task<QuerySnapshot> collectionRef = mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("items").get();
+        Task<QuerySnapshot> collectionRef = mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("all_items").get();
         collectionRef.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -154,6 +155,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
                     }
                     delivered.setText(String.valueOf(sum));
+                    tSum = sum + sum;
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "Failed to retrieve items", Toast.LENGTH_LONG).show();
                     Log.d("TAG", "Error getting documents: ", task.getException());
@@ -177,9 +179,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                         if (document.exists()) {
                             sum++;
                         }
-
                     }
                     picked.setText(String.valueOf(sum));
+                    tSum = sum + sum;
+
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "Failed to retrieve items", Toast.LENGTH_LONG).show();
                     Log.d("TAG", "Error getting documents: ", task.getException());

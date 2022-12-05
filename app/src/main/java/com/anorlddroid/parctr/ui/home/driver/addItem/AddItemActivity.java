@@ -154,6 +154,10 @@ public class AddItemActivity extends AppCompatActivity {
                         .addOnSuccessListener(documentReference -> Toast.makeText(this, "Item added",
                                 Toast.LENGTH_SHORT).show())
                         .addOnFailureListener(e -> Log.w("TAG", "Error writing document", e));
+                mDatabase.collection("tracking_items").document(mCurrentUser.getUid()).collection("all_items").add(trackingItems)
+                        .addOnSuccessListener(documentReference -> Toast.makeText(this, "Item added",
+                                Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e -> Log.w("TAG", "Error writing document", e));
                 saveToFirestore(mParcelID.getText().toString(), trackingItems);
                 finish();
             } else {
